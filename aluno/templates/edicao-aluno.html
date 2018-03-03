@@ -1,0 +1,174 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+
+{% block message %}  
+
+  {% if form.errors or form_end.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+      {% for field in form_end %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+  {% if form.sucess %}
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+        Aluno alterado com sucesso
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+{% block options %}
+  <div class="panel panel-default">
+           
+      <div class="panel-heading">
+        Opções
+      </div>
+      <ul class="list-group">
+        
+        <li class="list-group-item"><a href="{% url 'cadastro-historico' aluno.id %}">Histórico
+        </a></li>
+        
+        <li class="list-group-item"><a target="_blank" href="{% url 'boletim-aluno' aluno.id %}">Boletim</a></li>        
+
+        <li class="list-group-item"><a href=" {% url 'declaracao-aluno' aluno.id %}">Declaração</a></li>
+        
+        <li class="list-group-item"><a href="{% url 'matricula-aluno' aluno.id %}">Matrícula</a></li>
+        
+        <li class="list-group-item"><a href="{% url 'edicao-aluno' aluno.id %}">Alterar Dados Cadastrais</a></li>
+      
+      </ul>
+
+   </div>
+{% endblock options %}
+
+
+{% block body %}
+	
+<form action="{% url 'editar-aluno' aluno.id %}" method="POST" role="form">
+  {% csrf_token %}
+
+  <div class="panel panel-default">
+           
+                  <div class="panel-heading">
+                    Editar Aluno
+                  </div>
+                 <div class="panel-body" >
+                  
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="nome">Nome</label>
+                      <input type="text" value="{{ aluno.nome }}" class="form-control" id="nome" name="nome" >
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="sexo">Sexo</label>
+                      <select id="sexo" name="sexo" value="{{ aluno.sexo }}" class="form-control" >
+                        <option>Selecione</option>
+                              {% for x,y in form.fields.sexo.choices %} 
+                                <option value="{{x}}" {% if aluno.sexo == x %} selected {% endif %} >
+                                    {{y}}</option>
+                              {% endfor %}
+                      
+                      </select>
+                    </div>
+                    
+                    <div class="form-group col-md-3">
+                      <label for="data_nascimento">Data de nascimento</label>
+                      <input type="date"  value="{{ aluno.data_nascimento|date:"Y-m-d" }}" class="form-control" id="data_nascimento" name="data_nascimento">
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="nome_pai">Nome do pai</label>
+                      <input value="{{ aluno.nome_pai }}"  type="text" class="form-control" id="nome_pai" name="nome_pai">
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                      <label for="nome_mae" >Nome da mãe</label>
+                      <input value="{{ aluno.nome_mae }}"  type="text" class="form-control" id="nome_mae" name="nome_mae" >
+                    </div>
+
+                    <div class="form-group col-md-6">
+                      <label for="nome_mae" >Nome do responsável</label>
+                      <input value="{{ aluno.nome_responsavel }}"  type="text" class="form-control" id="nome_resp" name="nome_responsavel" >
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="telefone">Telefone</label>
+                      <input value="{{ aluno.telefone }}"  type="text" class="form-control" id="telefone" name="telefone">
+                    </div>
+                </div> 
+
+                <div class="row">
+                      <div class="col-md-2">
+                        <label for="cep">CEP</label>
+                        <input value="{{ aluno.endereco.cep }}"  type="text" class="form-control" id="cep" name="cep" >
+                      </div>
+                      <div class="col-md-4">
+                        <label for="logradouro">Logradouro</label>
+                        <input value="{{ aluno.endereco.logradouro }}" type="text" class="form-control" id="logradouro" name="logradouro" >
+                      </div>
+                      <div class=" col-md-2">
+                        <label for="numero">Número</label>
+                        <input type="text" class="form-control" value="{{ aluno.endereco.numero }}" id="numero" name="numero" >
+                      </div>
+                      <div class="col-md-4">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" class="form-control" id="bairro" value="{{ aluno.endereco.bairro }}" name="bairro" >
+                      </div>
+
+                  </div>
+                  <div class="row">
+                      <div class="col-md-6">
+                        <label for="complemento">Complemento</label>
+                        <input value="{{ aluno.endereco.complemento }}" type="text" class="form-control" id="complemento" name="complemento" >
+                      </div>
+                      <div class="col-md-4">
+                        <label for="cidade">Cidade</label>
+                        <input value="{{ aluno.endereco.cidade }}" type="text" class="form-control" id="cidade" name="cidade" >
+                      </div>
+                  </div>
+                 </div>
+                  
+              <div class="row" style="margin-top:10px; margin-bottom:20px;">
+                    <div class="col-md-12 text-center">
+                       <button onclick="window.location.href='{% url 'detalhe-aluno' aluno.id %}'" type="button" class="btn btn-primary">Voltar</button>
+                       <button type="submit" class="btn btn-primary">Alterar</button>
+                    </div>
+              </div>
+
+                </div>
+
+
+      </div>
+</div>      
+  
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    $("#telefone").mask('000000000');
+    $("#cep").mask('00000000');
+    $("#numero").mask('000000000');
+
+  });
+</script>
+
+</form>
+
+{% endblock body %}

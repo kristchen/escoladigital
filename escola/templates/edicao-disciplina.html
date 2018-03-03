@@ -1,0 +1,90 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+
+{% block message %}  
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+  {% if form.sucess %}
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+        Disciplina salva com sucesso.
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+  {% block options %}
+    <div class="panel panel-default">
+             
+        <div class="panel-heading">
+          Opções
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item"><a href="{% url 'cadastro-disciplina' %}"> Disciplinas</a></li>
+          <li class="list-group-item"><a href="{% url 'cadastro-serie' %}"> Séries</a></li>
+          <li class="list-group-item"><a href="{% url 'cadastro-turma' %}"> Turmas</a></li>
+          <li class="list-group-item"><a href="{% url 'edicao-configuracoes' %}"> Configurações</a></li>
+        </ul>
+
+     </div>
+
+{% endblock options %}
+
+{% block body %}
+	
+<form action="{% url 'editar-disciplina' disciplina.id %}" method="POST" role="form">
+  {% csrf_token %}
+  <div class="panel panel-default">
+     <div class="panel-heading">
+        Disciplinas - Edição De Disciplinas
+     </div>
+     <div class="panel-body" >
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label for="descricao">Descricao</label>
+              <input value="{{disciplina.descricao}}" type="text" class="form-control" name="descricao" id="descricao">           
+            </div>
+            <div class=" form-group form-check col-md-3">
+              <input type="checkbox"  
+
+              {% if disciplina.base_nacional_comum %}
+                checked="checked" 
+              {% endif %}
+
+              class="form-check-input" name="base_nacional_comum" id="base_nacional_comum">  
+              
+              <label class="form-check-label" for="base_nacioal_comum">Base Nacional Comum</label>
+              
+              <input 
+              {% if disciplina.somente_historico %}
+                checked="checked" 
+              {% endif %}
+
+              style="margin-top:17px;" type="checkbox" class="form-check-input" name="somente_historico" id="somente_historico">
+              <label class="form-check-label" for="somente_historico">Somente Histórico</label>
+            
+            </div>
+          </div>
+      </div>
+      <div class="row" style="margin-top:10px; margin-bottom:20px;">
+        <div class="col-md-12 text-center">
+      <button   type="reset" class="btn btn-primary">Limpar</button>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+  </div>
+  </div>   
+</form>
+{% endblock body %}

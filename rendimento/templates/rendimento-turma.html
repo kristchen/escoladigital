@@ -1,0 +1,59 @@
+
+{% if matriculas %}
+	<table class="table table-hover">
+	<thead>
+		<tr>
+			<th  class="col-sm-2">Nome</th>
+			<th  class="col-sm-2">Data de nascimento</th>
+			<th  class="col-md-2">Valor</th>
+		
+		</tr>
+	</thead>
+	
+	<tbody >
+		{% for mat in  matriculas %}
+		{% with  mat.nota.valor|floatformat:0 as nota   %}
+			<tr>
+				<td>{{mat.aluno.nome}}</td>
+				<input type="hidden" name="matricula" value="{{mat.id}}">
+				<td>{{mat.aluno.data_nascimento|date:'d/m/Y' }}</td>
+				<td>
+					{% if  mat.turma.serie.modalidade == 'I' %}
+						<select class="form-control col-sm-4" name="valor">
+							<option value="">Selecione</option>
+							{% for x,y in form.fields.conceitos.choices  %}
+								<option 
+								{% if x|add:0 == nota|add:0 %} 
+									selected="selected" 
+								{% endif %}
+								value="{{x}}">{{y}}</option>
+							{% endfor %}
+
+						</select>
+					{% else %}
+						<input style="width:43%" value="{{mat.nota.valor | floatformat:1}}" type="text" class="col-sm-1 form-control number" name="valor">
+					{% endif %}	
+				</td>
+			</tr>
+		{% endwith %}
+		{% endfor %}
+	</tbody>
+
+</table>
+  
+
+<div class="row" style="margin-top:10px; margin-bottom:20px;">
+  <div class="col-md-12 text-center">
+    <button id="btn-salvar" type="button" class="btn btn-primary">Salvar</button>
+  </div>
+</div>
+
+{% else %}
+	
+<div class="alert alert-info">
+    A consulta não trouxe resultados
+</div>
+
+{% endif %}
+
+

@@ -1,0 +1,103 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+{% block message %}  
+
+    <div class="alert alert-success" id="alert-success" style="display:none">
+      <button type="button" class="close">×</button>
+        Notas cadastradas com sucesso.
+    </div>
+
+
+    <div class="alert alert-danger" id="alert-notas" style="display:none">
+      <button type="button" class="close" >×</button>
+        Todas as notas devem ser preenchidas.
+    </div>
+
+    <div class="alert alert-danger" name="alert-busca" style="display:none">
+        Todos os campos de busca devem ser preenchidos.
+    </div>
+
+{% endblock message%}
+
+
+  {% block options %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+          Opções
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item"><a href="{% url 'cadastro-notas' %}"> Notas Regulares</a></li>
+          <li class="list-group-item"><a href="{% url 'cadastro-notas-recuperacao-final' %}"> Recuperação Final</a></li>
+          <li class="list-group-item"> Ano Letivo Atual: <b>{{ano}}</b> </li>
+        </ul>
+     </div>
+{% endblock options %}
+
+
+{% block body %}
+<form action="{% url 'cadastrar-notas' %}" method="POST" role="form">
+  {% csrf_token %}
+
+  <div class="panel panel-default">
+           
+      <div class="panel-heading">
+        Cadastro Notas Regulares
+      </div>
+      <div class="panel-body" >
+          <div id="filtros" class="row">
+            <div class="form-group col-md-3">
+              <label for="turma">Turma</label>
+              <select id="turma" name="turma" class="busca form-control" >
+                  <option value="">Selecione</option>
+                  {% for x in turmas %} 
+                    <option id-serie="{{x.serie.id}}" modalidade="{{x.serie.modalidade}}" value="{{x.id}}">{{x.serie.descricao}} - {{x.sequencia}}
+                    </option>
+                  {% endfor %}
+              </select>   
+            </div>
+
+            <div id="divDisciplinas" class="form-group col-md-3">
+
+            </div>
+
+            <div class="form-group col-md-3" style="display:none">
+              <label for="bimestre">Bimestre</label>
+              <select id="bimestre" name="bimestre" class="busca form-control" >
+                  <option value="">Selecione</option>
+                  {% for x,y in form.fields.bimestre.choices %} 
+                    <option value="{{x}}">{{y}}</option>
+                  {% endfor %}
+              </select>   
+            </div>
+
+            <div class="form-group col-md-3" style="display:none">
+              <label for="tipo">Tipo de nota</label>
+              <select id="tipo" name="tipo" class="busca form-control" >
+                  <option value="">Selecione</option>
+                  {% for x,y in form.fields.tipo.choices %} 
+                    <option value="{{x}}">{{y}}</option>
+                  {% endfor %}
+              </select>   
+            </div>
+
+          </div>
+      </div>
+  </div>      
+
+  <div class="panel panel-default" style="margin-top:10px; display:none">
+
+    <div class="panel-heading">Alunos</div>
+
+    <div class="panel-body" id="divAluno">
+    
+    </div>
+
+
+
+  </div>
+
+</form>
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "js/cadastro_notas.js" %}"></script>
+
+{% endblock body %}

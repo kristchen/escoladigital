@@ -1,0 +1,100 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+
+{% block message %}  
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+  {% if form.sucess %}
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+        Aluno matriculado com sucesso.
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+{% block options %}
+  <div class="panel panel-default">
+           
+      <div class="panel-heading">
+        Opções
+      </div>
+      <ul class="list-group">
+              <li class="list-group-item"><a href="{% url 'cadastro-historico' aluno.id %}">Histórico</a></li>
+<li class="list-group-item"><a target="_blank" href="{% url 'boletim-aluno' aluno.id %}">Boletim</a></li>        <li class="list-group-item"><a href="#">Declaração</a></li>
+        <li class="list-group-item"><a href="{% url 'matricula-aluno' aluno.id %}">Matrícula</a></li>
+        <li class="list-group-item"><a href="{% url 'edicao-aluno' aluno.id %}">Alterar dados cadastrais</a></li>
+      </ul>
+
+   </div>
+{% endblock options %}
+
+
+{% block body %}
+<form action="{% url 'matricular-aluno' aluno.id %}" method="POST" role="form">
+  {% csrf_token %}
+
+  <div class="panel panel-default">
+           
+      <div class="panel-heading">
+        Matrícular Aluno
+      </div>
+      <div class="panel-body" >
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="nome">Nome</label>
+              <input readonly="readonly" type="text" value="{{ aluno.nome }}" class="form-control" id="nome" name="nome" >
+            </div>
+            
+            <div class="form-group col-md-3">
+              <label for="data_nascimento">Data de nascimento</label>
+              <input readonly="readonly" type="date"  value="{{ aluno.data_nascimento|date:"Y-m-d" }}" class="form-control" id="data_nascimento" name="data_nascimento">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label for="turma">Turma</label>
+              <select id="turma" name="turma" class="form-control" >
+                  <option>Selecione</option>
+                {% for x in form.fields.turma.queryset %} 
+                     <option 
+                      {% if matricula_atual and matricula_atual.turma.id == x.id %}
+                          selected="selected"
+                       {%endif%}      
+                      value="{{x.id}}">{{x.serie.descricao}} - {{x.sequencia}}</option>
+                {% endfor %}
+              </select>   
+            </div>
+            <div class="form-group col-md-2">
+              <label for="ano">Ano</label>
+              <input class="form-control" type="text" readonly="readonly" name="ano" id="ano" value="{{ano_letivo}}">
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px; margin-bottom:20px;">
+              <div class="col-md-12 text-center">
+                 <button onclick="window.location.href='{% url 'detalhe-aluno' aluno.id %}'" type="button" class="btn btn-primary">Voltar</button>
+                 <button type="submit" class="btn btn-primary">Matricular</button>
+              </div>
+          </div>
+
+      </div>
+  </div>      
+  
+</form>
+
+{% endblock body %}

@@ -1,0 +1,187 @@
+{% load staticfiles %}
+<html>
+<head>
+<meta "charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="{% static "/css/historico.css" %}">
+</head>
+  <body> 
+  	
+  	<table class="titulo">
+  		<tr>
+  			<td rowspan="6">
+  				  	<div class="divImage">
+             			<img src="{% static "/images/emblema.png" %}">    
+   					 </div>
+  			</td>
+  			<td colspan="2">
+  				 <h3 class="h3-titulo">COLÉGIO BATISTA MONTE SINAI</h3> 	
+  			</td>
+  		</tr>
+
+      <tr>
+        <td colspan="2"  class="info"><label>PARECER: </label> {{confs.parecer}} <label style="margin-left:5px">VALIDADE: </label>{{confs.data_validade_parecer | date:'d/m/Y'}}</td>
+      </tr>
+  		<tr>
+  			<td colspan="2" class="info"><label>ENTIDADE MANTENEDORA: </label> PAI – PROJETO DE APOIO À INFÂNCIA </td>
+  		</tr>
+  		<tr>
+  			<td colspan="2"  class="info"><label>ENDEREÇO: </label> AVENIDA J - Nº 194 - CEP  61.605-600 - JUREMA - CAUCAIA</td>
+  		</tr>
+  		<tr>
+  			<td class="info" ><label>CNPJ: </label>10653064/0001-45		
+          <label style="margin-left:5px">  TELEFONE: </label>(85) 34891176</td>
+  		</tr>
+  		<tr>
+        <td></td>
+  		</tr>
+
+  	</table>
+    <table align="right" class="titulo">
+        
+        <tr style="background-color:#adadad; border-bottom:solid 1px;">
+            <td colspan="4"><h3>HISTÓRICO ESCOLAR</h3></td>
+        </tr>
+        
+        <tr>
+          <td colspan="2" style="width:150px" class="td-dados"><label>Aluno</label>: {{aluno.nome}}</td>
+          <td class="td-dados"><label>Data Nascimento</label>: {{aluno.data_nascimento | date:'d/m/Y'}}</td>
+          <td class="td-dados"><label>Sexo</label>: 
+    
+              {% if aluno.sexo == 'M' %}
+                Masculino
+              {% else %}
+                Feminino
+              {% endif %}
+
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2" style="width:150px" class="td-dados"><label>Mãe</label>: {{aluno.nome_mae}}</td>
+          <td colspan="2" class="td-dados"><label>Pai</label>: {{aluno.nome_pai}}</td>
+        </tr>
+    </table>
+
+    <table align="right" class="titulo">
+        
+        <tr colspan="2" class="titulo-notas">
+            <td class="td-dados" colspan="2"><h5>Componentes Curriculares</h5></td>
+            <td class="td-dados-serie"><h5>1°</h5></td>
+            <td class="td-dados-serie"><h5>2°</h5></td>
+            <td class="td-dados-serie"><h5>3°</h5></td>
+            <td class="td-dados-serie"><h5>4°</h5></td>
+            <td class="td-dados-serie"><h5>5°</h5></td>
+            <td class="td-dados-serie"><h5>6°</h5></td>
+            <td class="td-dados-serie"><h5>7°</h5></td>
+            <td class="td-dados-serie"><h5>8°</h5></td>
+            <td class="td-dados-serie"><h5>9°</h5></td>
+        </tr>
+        
+        <tr>
+            <td class="td-group" rowspan="{{rowspan_base}}">Base Nacional</td>
+        </tr>
+        
+        {% for dis in base_nacional  %}
+          <tr>
+              <td class="td-notas">{{dis.descricao}}</td>
+              {% for nota in  dis.notas %}
+                {% if  nota %}
+                  <td class="td-notas td-dados-val">{{nota.valor}}</td>
+                {% else %}
+                  <td class="td-notas td-dados-val">-</td>
+                {% endif %}
+              {% endfor %}
+          </tr>
+        {% endfor %}
+
+        {% if diversificada %}
+          
+          <tr>
+            <td class="td-group" rowspan="{{rowspan_base}}">Parte Diversificada</td>
+          </tr>
+          {% for dis in diversificada  %}
+            <tr>
+                <td class="td-notas ">{{dis.descricao}}</td>
+                {% for nota in  dis.notas %}
+                  {% if  nota %}
+                    <td class="td-notas td-dados-val">{{nota.valor}}</td>
+                  {% else %}
+                    <td class="td-notas td-dados-val">-</td>
+                  {% endif %}
+                {% endfor %}
+            </tr>
+          {% endfor %}
+        
+        {% else %}
+          
+          <tr>
+            <td class="td-group" rowspan="2">Parte Diversificada</td>
+          </tr>
+          <tr style="line-height:6"><td class="td-notas" colspan="10">NÃO EXISTEM DISCIPLINAS</td></tr>
+        
+        {% endif %}
+
+        <tr colspan="2" class="titulo-notas">
+            <td class="td-dados" colspan="2"><h5>Carga Horária</h5></td>
+            {% for carga in carga_horaria  %}              
+              
+              {% if carga %}
+                  <td class="td-dados td-dados-val">{{carga}}</td>  
+              {% else %}
+                  <td class="td-dados td-dados-val">-</td>
+              {% endif %}
+                          
+            {% endfor %}
+        </tr>
+
+    </table> 
+
+    <table align="right" class="titulo">
+        <tr class="titulo-notas">
+            <td colspan="6" class="td-dados"><h5>Registros Complementares</h5></td>
+        </tr>
+        <tr class="titulo-notas">
+            <td class="td-dados"><h5>Série</h5></td>
+            <td class="td-dados"><h5>Ano</h5></td>
+            <td class="td-dados"><h5>Instituição</h5></td>
+            <td class="td-dados"><h5>Município</h5></td>
+            <td class="td-dados"><h5>UF</h5></td>
+            <td class="td-dados"><h5>Situação</h5></td>
+        </tr>
+
+        {% for historico in historicos %}
+          <tr>
+              <td class="td-dados ">{{historico.serie.descricao}}</td>
+              <td class="td-dados ">{{historico.ano}}</td>
+              <td class="td-dados ">{{historico.instituicao.descricao}}</td>
+              <td class="td-dados ">{{historico.instituicao.cidade}}</td>
+              <td class="td-dados ">{{historico.instituicao.uf}}</td>
+              
+
+              {% if  historico.situacao %}
+                <td class="td-dados ">Aprovado</td>
+                {% else %}
+                <td class="td-dados ">Reprovado</td>
+              {% endif %}
+          
+          </tr>
+        {% endfor %}
+
+    </table>
+
+    <div style="margin-top:20px;">
+      <label>Observações:</label>
+    </div>
+    <br>
+    <hr>
+    <hr>
+    <hr>
+    <hr>
+    <hr>
+    <hr>
+    <hr>
+    <hr>
+
+  	
+  </body>
+</html>   

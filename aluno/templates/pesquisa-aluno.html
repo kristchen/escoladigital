@@ -1,0 +1,81 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+
+{% block message %}  
+
+{% endblock message%}
+
+
+{% block options %}
+  <div class="panel panel-default">
+           
+      <div class="panel-heading">
+        Opções
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"><a href="{% url 'cadastro-aluno' %}"> Cadastrar Alunos</a></li>
+        <li class="list-group-item"><a href="{% url 'pesquisa-aluno' %}"> Pesquisar Alunos</a></li>
+      </ul>
+
+   </div>
+
+{% endblock options %}
+
+
+{% block body %}
+	
+<form action="{% url 'pesquisar-aluno' %}" method="POST" role="form">
+  {% csrf_token %}
+<div class="row">
+  <div class="form-group col-lg-12">
+    <div class="input-group">
+      <input name="nome" type="text" class="form-control" placeholder="Nome do aluno">	
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="submit">Buscar</button>
+      </span>
+    </div>
+  </div>
+</div>
+</form>
+	
+
+{% if alunos %}
+   <div class="panel panel-default" style="margin-top:10px;">
+
+	  <div class="panel-heading">Resultados</div>
+
+	  <div class="panel-body">
+		  <table class="table table-hover">
+		   	<thead>
+		   		<tr>
+		   			<th>Nome</th>
+		   			<th>Data de nascimento</th>
+		   			<th>Nome da mãe</th>
+		   			<th></th>
+		   		</tr>
+		   	</thead>
+		  	
+		  	<tbody>
+		  		{% for aluno in  alunos %}
+		  			<tr>
+		  				<td>{{aluno.nome}}</td>
+		  				<td>{{aluno.data_nascimento|date:'d/m/Y' }}</td>
+		  				<td>{{aluno.nome_mae}}</td>
+		  				<td><a href="{% url 'detalhe-aluno' aluno.id %}">Detalhes</a></td>
+		  			</tr>
+		  		{% endfor %}
+		  	</tbody>
+
+		  </table>
+	  </div>
+	</div>
+
+{% elif alunos is not None %}
+
+	 <div class="alert alert-info" style="margin-top: 30px;">
+      	<button type="button" class="close" data-dismiss="alert">×</button>
+      	A pesquisa não trouxe resultados.
+     </div>
+
+{% endif %}	
+{% endblock body %}

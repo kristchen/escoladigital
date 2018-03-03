@@ -1,0 +1,96 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+
+{% block message %}  
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+  {% if form.sucess %}
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+        Configuração salva com sucesso
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+ {% block options %}
+    <div class="panel panel-default">
+             
+        <div class="panel-heading">
+          Opções
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item"><a href="{% url 'cadastro-disciplina' %}"> Disciplinas</a></li>
+          <li class="list-group-item"><a href="{% url 'cadastro-serie' %}"> Séries</a></li>
+          <li class="list-group-item"><a href="{% url 'cadastro-turma' %}"> Turmas</a></li>
+          <li class="list-group-item"><a href="{% url 'edicao-configuracoes' %}"> Configurações</a></li>
+        </ul>
+
+     </div>
+
+{% endblock options %}
+
+{% block body %}
+	
+<form action="{% url 'editar-configuracoes' %}" method="POST" role="form">
+  {% csrf_token %}
+  <div class="panel panel-default">
+     <div class="panel-heading">
+        Configurações
+     </div>
+     <div class="panel-body" >
+          <div class="row">
+            
+            <div class="form-group col-md-2">
+              <label for="media">Média</label>
+              <input type="text" value="{{confs.media}}" class="form-control" name="media" id="media">             
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="ano_letivo">Ano Letivo</label>
+              <select id="ano_letivo" name="ano_letivo" class="form-control" >
+                <option>Selecione</option>
+                      {% for x, y in form.fields.ano_letivo.choices %} 
+                        <option 
+                        {% if x == confs.ano_letivo %}
+                          selected="selected" 
+                        {% endif %}
+                        value="{{x}}">{{y}}</option>
+                      {% endfor %}
+              </select>   
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="parecer">Parecer</label>
+              <input type="text" value="{{confs.parecer}}" class="form-control" name="parecer" id="parecer">             
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="data_validade_parecer">Validade parecer</label>
+              <input type="date"  value="{{confs.data_validade_parecer|date:"Y-m-d" }}" class="form-control" id="data_validade_parecer" name="data_validade_parecer">
+            </div>
+          
+          </div>
+      </div>
+      <div class="row" style="margin-top:10px; margin-bottom:20px;">
+        <div class="col-md-12 text-center">
+      <button type="submit" class="btn btn-primary">Alterar</button>
+    </div>
+  </div>
+  </div>   
+</form>
+
+{% endblock body %}

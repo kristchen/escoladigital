@@ -1,0 +1,12 @@
+<div class="select-disciplinas">
+   <label for="disciplinas">Disciplinas</label>
+   <select id="disciplinas" multiple="multiple" name="disciplinas">
+   	{% for x in form.fields.disciplinas.queryset %} 
+		<option {% if x.id in disciplinas_salvas %} selected="selected" 
+			
+		{% endif %} value="{{x.id}}">{{x.descricao}}</option>
+	{% endfor %}
+   </select>
+</div>
+
+

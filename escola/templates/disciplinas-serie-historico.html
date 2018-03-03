@@ -1,0 +1,39 @@
+{% if curriculos %}
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th  class="col-sm-2">Disciplina</th>
+			<th  class="col-sm-2">Nota</th>
+		</tr>
+	</thead>
+	
+	<tbody>
+		{% for cr in curriculos %} 
+			<tr>
+				<input type="hidden" name="disciplina" value="{{cr.disciplina.id}}">
+				<td>
+					{{cr.disciplina.descricao}}
+				</td>
+				<td>
+				<input style="width:27%" type="text" class="col-sm-1 form-control number" name="valor">
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+
+</table>
+
+<div class="row" style="margin-top:10px; margin-bottom:20px;">
+  <div class="col-md-12 text-center">
+    <button id="btn-salvar" type="button" class="btn btn-primary">Salvar</button>
+     <button id="btn-limpar" type="reset" class="btn btn-primary">Limpar</button>
+  </div>
+</div>
+
+{% else %}
+	
+<div class="alert alert-info">
+    A consulta não trouxe resultados
+</div>
+
+{% endif %}

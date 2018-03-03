@@ -1,0 +1,86 @@
+{% load staticfiles %}
+<html>
+<head>
+<meta "charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="{% static "/css/declaracao.css" %}">
+</head>
+  <body> 
+  	
+  	<table class="titulo">
+  		<tr>
+  			<td rowspan="5">
+  				  	<div class="divImage">
+             			<img src="{% static "/images/emblema.png" %}">    
+   					 </div>
+  			</td>
+  			<td colspan="2">
+  				 <h3 class="h3-titulo">COLÉGIO BATISTA MONTE SINAI</h3> 	
+  			</td>
+  		</tr>
+
+  		<tr>
+  			<td colspan="2" style="padding-left: 36px;" class="info"><label>ENTIDADE MANTENEDORA: </label> PAI – PROJETO DE APOIO À INFÂNCIA</td>
+  		</tr>
+  		<tr>
+  			<td colspan="2" style="padding-left: 50px;" class="info"><label>ENDEREÇO: </label> AVENIDA J - Nº 194 - CEP  61.605-600 - JUREMA - CAUCAIA</td>
+  		</tr>
+  		<tr>
+  			<td class="info" style="padding-left: 49px;"><label>CNPJ: </label>10653064/0001-45	|	<label>TELEFONE: </label>(85) 34891176</td>
+  			
+  		</tr>
+  		<tr>
+  		</tr>
+
+  	</table>
+
+  	<h3 class="h3-titulo">DECLARAÇÃO</h3>
+  	
+  	<div class="main-text">
+  		
+      {% if texto %}
+              
+              {{ texto|safe }}
+              
+      {% else %}
+
+
+        {% with matricula.turma.serie.modalidade as modalidade  %}
+            
+        {% if matricula.ano == data|date:'Y' %}
+          
+          <p>Declaro para os devidos fins que o aluno <b>{{aluno.nome}}</b> está regularmente matriculado na presente instituição de ensino, cursando o <b> {{matricula.turma.serie.descricao}} do 
+          {% if modalidade == 'F'  %}
+            Ensino Fundamental.
+          {% else %}
+            Ensino Infantil.
+          {% endif %}
+          </b>
+          
+        {% else %}
+
+          <p>Declaro para os devidos fins que o aluno <b>{{aluno.nome}}</b>, no ano de <b>{{matricula.ano}}</b>, cursou na presente instituição de ensino o <b>{{matricula.turma.serie.descricao}} do 
+          {% if modalidade == 'F'  %}
+            Ensino Fundamental.
+          {% else %}
+            Ensino Infantil.
+          {% endif %}
+          </b>
+        
+        {% endif %}
+
+        {% endwith %}
+
+      {% endif %}
+
+    </p>
+
+  		<p class="texto-direito"> Por ser verdade assino a presente declaração.</p>
+  	<div>
+
+  	<div class="assinatura">
+            <hr/>
+    </div>
+
+    <p class="texto-direito-data"> {{cidade}}, {{data|date:'d'}} de {{data|date:'F'}} de {{data|date:'Y'}} </p>	
+  </body>
+</html>   

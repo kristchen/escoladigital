@@ -1,0 +1,126 @@
+{% load staticfiles %}
+<html>
+<head>
+<meta "charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="{% static "/css/boletim_fundamental.css" %}">
+</head>
+  <body> 
+        <div class="divImage">
+             <img src="{% static "/images/emblema.png" %}">    
+        </div>
+        <div class="data-emissao">
+        <label>Data de emissão</label>: {{data|date:'d/m/Y'}}
+        </div>
+        <table align="right" class="titulo">
+          <tr style="background-color:#adadad;">
+              <td colspan="6"><h3>COLÉGIO BATISTA MONTE SINAI - BOLETIM ESCOLAR</h3></td>
+          </tr>
+          <tr>
+            <td><label>Aluno</label>: {{matricula.aluno.nome}}</td>
+            <td><label>Turma</label>: {{matricula.turma.sequencia}}</td>
+            <td><label>Serie</label>: {{matricula.turma.serie.descricao}}</td>
+          </tr>
+          <tr>
+            {% if matricula.turma.serie.modalidade == 'F' %}
+                <td><label>Modalidade</label>: Ensino Fundamental</td>  
+              {% else %}
+                <td><label>Modalidade</label>: Ensino Infantil</td>
+            {% endif %}
+
+            <td><label>Turno</label>: M</td>
+            <td><label>Ano Letivo</label>: 2017</td>
+          </tr>
+        </table> 
+
+        <table align="left" class="notas">
+              <thead>
+                <tr style="background-color:#adadad;">
+                  <th>Disciplina</th>
+                  <th colspan="2">1° Bimestre</th>
+                  <th colspan="2">2° Bimestre</th>
+                  <th colspan="2">3° Bimestre</th>
+                  <th colspan="2">4° Bimestre</th>
+                  <th colspan="3">Resultado Final</th>
+                </tr>
+                <tr>
+                  <th></th>
+                  <th style="width:30px;" >MB</th>
+                  <th style="width:30px;" >R</th>
+                  
+                  <th style="width:30px;" >MB</th>
+                  <th style="width:30px;" >R</th>
+                  
+                  <th style="width:30px;" >MB</th>
+                  <th style="width:30px;" >R</th>
+
+                  <th style="width:30px;" >MB</th>
+                  <th style="width:30px;" >R</th>
+
+                  <th style="width:30px;" >MF</th>
+                  <th style="width:30px;" >RF</th>
+                  <th style="width:30px;" >ST</th>
+                <tr>
+              </thead>
+              <tbody>
+                  {% for dis in disciplinas  %}
+                  <tr>
+                      <td>{{dis.descricao}}</td>
+                      {% for bimestre in dis.notas %}
+                        {% for nota in bimestre  %}
+                           {% if nota %}
+                              {% if  nota < 6 %}
+                                  <td>{{nota|floatformat:1}}*</td>
+                                {% else %}  
+                                  <td>{{nota|floatformat:1}}</td>
+                              {% endif %}
+                           {% else %}
+                              <td></td>
+                           {% endif %}
+                        {% endfor %}
+                      {% endfor %}
+                      
+                      <td>{{dis.media_final|floatformat:1}}</td>
+                      
+                      <td>{{dis.recuperacao_final|floatformat:1}}</td>
+                      
+                      {% if dis.situacao %}
+                        <td>{{dis.situacao}}</td>
+                      
+                        {% else %}
+                      
+                        <td></td> 
+                      
+                      {% endif %}
+
+                  </tr>
+                  {% endfor %}
+
+                  <tr>
+                      <td>Classificação Na Turma</td>
+                      <td colspan="2"><label>1°</label></td>
+                      <td colspan="2"><label>4°</label></td>
+                      <td colspan="2"><label>5°</label></td>
+                      <td colspan="2"><label>2°</label></td>
+                      <td colspan="3"></td>
+                  </tr>
+
+              </tbody>
+          </table>
+          <fieldset>
+                  <label>MB:</label>    Média Bimestral   |
+                  <label>MF:</label>    Média Final   |
+                  <label>R:</label>     Recuperação   |
+                  <label>RF:</label>    Recuperação Final   |
+                  <label>*:</label>     Notas Abaixo Da Média   |
+                  <br><label>ST:</label>    Situação   |
+                  <label>APR:</label>   Aprovado   |
+                  <label>REP:</label>   Reprovado   |
+          </fieldset> 
+       
+          <div class="assinatura">
+            <hr/>
+            <label>Coordenador</label>
+          </div>
+       
+        </body>
+</html>    

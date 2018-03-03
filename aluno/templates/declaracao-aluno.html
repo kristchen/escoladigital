@@ -1,0 +1,148 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+
+{% block message %}  
+
+  {% if form.errors or form_end.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+      {% for field in form_end %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+  {% if form.sucess %}
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+        Aluno alterado com sucesso
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+{% block options %}
+  <div class="panel panel-default">
+           
+      <div class="panel-heading">
+        Opções
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"><a href="{% url 'cadastro-historico' aluno.id %}">Histórico</a></li>
+        <li class="list-group-item"><a target="_blank" href="{% url 'boletim-aluno' aluno.id %}">Boletim</a></li>        <li class="list-group-item"><a href=" {% url 'declaracao-aluno' aluno.id %}">Declaração</a></li>
+        <li class="list-group-item"><a href="{% url 'matricula-aluno' aluno.id %}">Matrícula</a></li>
+        <li class="list-group-item"><a href="{% url 'edicao-aluno' aluno.id %}">Alterar Dados Cadastrais</a></li>
+      </ul>
+
+   </div>
+{% endblock options %}
+
+
+{% block body %}
+	
+<form action="{% url 'emitir-declaracao-aluno' aluno.id %}" method="POST" role="form">
+  {% csrf_token %}
+
+  <div class="panel panel-default">
+           
+        <div class="panel-heading">Declaração Aluno</div>
+         
+         <div class="panel-body" >
+          
+          <div class="row">
+          	<div class="form-group col-md-4">
+              <label for="ano">Ano Letivo</label>
+              <select id="ano" name="ano" class="form-control" >
+                <option>Selecione</option>
+                  {% for matricula in matriculas %} 
+                    <option value="{{matricula.ano}}">{{matricula.ano}}</option>
+                  {% endfor %}            
+              </select>
+          	</div>
+
+            <div class="form-group col-md-4">
+              <label for="tipo">Tipo</label>
+              <select id="tipo" name="tipo" class="form-control" >
+                <option>Selecione</option>
+                    {% for x,y in form.fields.tipo.choices %}
+                      <option value="{{x}}">{{y}}</option>
+                    {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="cidade_declaracao">Cidade</label>
+              <select id="cidade_declaracao" name="cidade_declaracao" class="form-control" >
+                <option>Selecione</option>
+                    {% for x,y in form.fields.cidade_declaracao.choices %}
+                      <option value="{{x}}">{{y}}</option>
+                    {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="row" id="divTextArea">
+              <div class="form-group col-md-12">
+                <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+                    <a class="btn btn-large" data-edit="bold"><i class="icon-bold"></i></a>
+                </div>
+                <textarea name="texto" id="editor" class="form-control" rows="10"> </textarea>
+              </div>
+          </div>
+                    
+          <div class="row" style="margin-top:10px; margin-bottom:20px;">
+                <div class="col-md-12 text-center">
+                   <button onclick="window.location.href='{% url 'detalhe-aluno' aluno.id %}'" type="button" class="btn btn-primary">Voltar</button>
+                   <button type="button" id="btnEmitir" class="btn btn-primary">Emitir</button>
+                </div>
+          </div>
+        
+        </div>
+    </div>     
+</form>
+
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "js/tinymce.min.js" %}"></script>
+<script type="text/javascript">
+  
+tinymce.init({ selector:'textarea',
+                setup: function (editor) {
+                  editor.on('change', function () {
+                  editor.save();});
+                },
+                height:'400'
+
+});
+
+$(document).ready(function(){
+    $('#divTextArea').hide();
+    
+    $("#tipo").change(function(){
+
+      if($(this).val() == "O"){
+        $('#divTextArea').show();
+      }else{
+        tinyMCE.activeEditor.setContent("");
+        $('#divTextArea').hide();
+      }
+    });
+
+    $("#btnEmitir").click(function(){
+      $("#editor").text(tinyMCE.activeEditor.getContent());
+      $('form').submit();
+    });
+});
+
+</script>
+{% endblock body %}

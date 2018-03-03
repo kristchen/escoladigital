@@ -1,0 +1,108 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+
+{% block message %}  
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+  {% if form.sucess %}
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+        Disciplinas associadas com sucesso.
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+ {% block options %}
+    <div class="panel panel-default">
+             
+        <div class="panel-heading">
+          Opções
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item"><a href="{% url 'cadastro-disciplina' %}"> Disciplinas</a></li>
+          <li class="list-group-item"><a href="{% url 'cadastro-serie' %}"> Séries</a></li>
+          <li class="list-group-item"><a href="{% url 'cadastro-turma' %}"> Turmas</a></li>
+          <li class="list-group-item"><a href="{% url 'edicao-configuracoes' %}"> Configurações</a></li>
+        </ul>
+
+     </div>
+
+{% endblock options %}
+
+
+{% block body %}
+	
+<form action="{% url 'associar-disciplina' %}" method="POST" role="form">
+  {% csrf_token %}
+  <div class="panel panel-default">
+           
+                  <div class="panel-heading">
+             
+                    Séries - Associar Disciplinas
+                  </div>
+                 <div class="panel-body" >
+                  
+                  <div class="row">
+                    
+                    <div class="form-group col-md-5">
+                      <label for="series">Séries</label>
+                      <select id="series" name="series" class="form-control" >
+                        <option>Selecione</option>
+                              {% for x in form.fields.series.queryset %} 
+                                <option value="{{x.id}}">{{x.descricao}}</option>
+                              {% endfor %}
+                      </select>                       
+                    </div>
+                  </div>
+
+                <div class="row">
+                      <div id="div-disciplinas" class="form-group col-md-10">
+                      
+                      </div>
+                  </div>
+                </div>
+  
+                <div class="row" style="margin-top:10px; margin-bottom:20px; display:none">
+                  <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                  </div>
+                </div>    
+  
+  </div>
+</form>
+
+<script>
+    $(document).ready(function() {
+
+        $("#series").change(function(){
+          if($(this).children("option:selected").val() !== "Selecione"){
+            $("#div-disciplinas").load("/escola/serie/"+$(this).val()+"/disciplinas", function(){
+                $('#disciplinas').multi({
+                          search_placeholder: 'Pesquisar disciplinas...',
+                });
+                $(":submit").parents().eq(1).show();
+            });
+          }else {
+            $("#div-disciplinas").children().remove();
+            $(":submit").parents().eq(1).hide();
+          }
+        });
+
+    });
+</script>
+
+{% endblock body %}

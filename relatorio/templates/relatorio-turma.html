@@ -1,0 +1,72 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+{% block message %}  
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+ {% block options %}
+  <div class="panel panel-default">
+             
+    <div class="panel-heading">
+      Opções
+    </div>
+
+  </div>
+
+{% endblock options %}
+
+
+{% block body %}
+	
+<form action="{% url 'emitir-relatorio-turma' %}" method="POST" role="form">
+  {% csrf_token %}
+  <div class="panel panel-default">
+     <div class="panel-heading">
+        Relatório  - Alunos Matriculados Por Turma
+     </div>
+     <div class="panel-body" >
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label for="serie">Série</label>
+              <select id="serie" name="serie" class="form-control" >
+                <option>Selecione</option>
+                {% for x in form.fields.serie.queryset %} 
+                <option value="{{x.id}}">{{x.descricao}}</option>
+                {% endfor %}
+              </select>   
+            </div>
+            <div class="form-group col-md-2">
+              <label for="sequencia">Turma</label>
+              <select id="sequencia" name="sequencia" class="form-control" >
+                <option value="">Todas</option>
+                {% for x, y in form.fields.sequencia.choices %} 
+                  <option value="{{x}}">{{y}}</option>
+                {% endfor %}
+              </select>   
+            </div>
+          </div>
+      </div>
+      <div class="row" style="margin-top:10px; margin-bottom:20px;">
+        <div class="col-md-12 text-center">
+      <button   type="reset" class="btn btn-primary">Limpar</button>
+      <button type="submit" class="btn btn-primary">Emitir</button>
+    </div>
+  </div>
+  </div>   
+</form>
+
+{% endblock body %}

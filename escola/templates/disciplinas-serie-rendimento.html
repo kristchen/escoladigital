@@ -1,0 +1,11 @@
+<div class="select-disciplinas">
+   <label for="disciplinas">Disciplinas</label>
+   <select class="form-control busca" id="disciplinas" name="disciplinas">
+   	<option value="">Selecione</option>
+   	{% for x in disciplinas %} 
+		<option value="{{x.id}}">{{x.descricao}}</option>
+	{% endfor %}
+   </select>
+</div>
+
+

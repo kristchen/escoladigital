@@ -1,0 +1,144 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+
+{% block message %}  
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+  {% if form.sucess %}
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+        Disciplina cadastrada com sucesso.
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+  {% block options %}
+    <div class="panel panel-default">
+             
+        <div class="panel-heading">
+          Opções
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item"><a href="{% url 'cadastro-disciplina' %}"> Disciplinas</a></li>
+          <li class="list-group-item"><a href="{% url 'cadastro-serie' %}"> Séries</a></li>
+          <li class="list-group-item"><a href="{% url 'cadastro-turma' %}"> Turmas</a></li>
+          <li class="list-group-item"><a href="{% url 'edicao-configuracoes' %}"> Configurações</a></li>
+        </ul>
+
+     </div>
+
+{% endblock options %}
+
+{% block body %}
+	
+<form action="{% url 'cadastrar-disciplina' %}" method="POST" role="form">
+  {% csrf_token %}
+  <div class="panel panel-default">
+     <div class="panel-heading">
+        Disciplinas - Cadastro De Disciplinas
+     </div>
+     <div class="panel-body" >
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label for="descricao">Descricao</label>
+              <input type="text" class="form-control" name="descricao" id="descricao">           
+            </div>
+            <div class=" form-group form-check col-md-3">
+              <input type="checkbox"  class="form-check-input" name="base_nacional_comum" id="base_nacional_comum">           
+              <label class="form-check-label" for="base_nacioal_comum">Base Nacional Comum</label>
+              <input style="margin-top:17px;" type="checkbox" class="form-check-input" name="somente_historico" id="somente_historico">
+              <label class="form-check-label" for="somente_historico">Somente Histórico</label>
+            </div>
+          </div>
+      </div>
+      <div class="row" style="margin-top:10px; margin-bottom:20px;">
+        <div class="col-md-12 text-center">
+      <button   type="reset" class="btn btn-primary">Limpar</button>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+  </div>
+  </div>   
+</form>
+
+<div class="panel panel-default" style="margin-top:10px;">
+
+    <div class="panel-heading">Disciplinas</div>
+
+    <div class="panel-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th class="col-sm-3" >Descrição</th>
+            <th >Situação</th>
+            <th class="col-sm-1"></th>
+            <th class="col-sm-1"></th>
+          </tr>
+        </thead>
+        
+        <tbody >
+          {% for disciplina in  disciplinas %}
+            <tr id="{{disciplina.id}}">
+              <td>{{disciplina.descricao}}</td>
+              <td> {% if disciplina.ativa %}
+                      Ativa
+                    {% else %}
+                      Inativa
+                   {% endif %}
+              </td>
+              <td><a href="{% url 'edicao-disciplina' disciplina.id %}">Editar</a></td>
+              <td>
+                {% if disciplina.ativa %}
+                      <a class="status" href="javascript:void(0)">Inativar</a>
+                    {% else %}
+                      <a class="status" href="javascript:void(0)">Ativar</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    $(".status").click(function(){
+      var elem = this;
+      var disciplina;
+      $.ajax({
+        type:"POST",
+        headers: {'X-CSRFToken':$("input[name=csrfmiddlewaretoken]").val()},
+        url:"/escola/disciplina/"+$(this).parents().eq(1).attr("id")+"/status/alterar",
+        success:function(data){
+          disciplina = data;
+        },async:false
+      });
+
+      if(disciplina[0].fields.ativa){
+        $(elem).text('Inativar');
+        $(elem).parent().prev().text('Ativa');
+      }else{
+        $(elem).text('Ativar');
+        $(elem).parent().prev().text('Inativa');
+      }
+
+    });
+  });
+
+</script>
+{% endblock body %}

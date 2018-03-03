@@ -1,0 +1,92 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+
+{% block message %}  
+
+    <div class="alert alert-danger" name="alert-historico" style="display:none">
+        Todos os campos do histórico devem ser preenchidos.
+    </div>
+
+    <div class="alert alert-success" id="alert-success" style="display:none">
+      <button type="button" class="close">×</button>
+        Histórico cadastrado com sucesso.       
+    </div>
+
+{% endblock message%}
+
+
+{% block options %}
+
+<div class="panel panel-default">
+           
+  <div class="panel-heading">
+    Opções
+  </div>
+
+  <ul class="list-group">
+    <li class="list-group-item"><a href="{% url 'detalhe-historico'  aluno.id %}">Detalhe Histórico</a></li>
+    <li class="list-group-item"><a href="{% url 'cadastro-historico' aluno.id %}">Cadastro Histórico</a></li>        
+    <li class="list-group-item"><a href=" {% url 'emitir-historico' aluno.id %} ">Emitir Histórico</a></li>
+  </ul>
+
+</div>
+
+{% endblock options %}
+
+{% block body %}
+	
+<form role="form">
+  {% csrf_token %}
+
+  <div class="panel panel-default">
+           
+           <div class="panel-heading">
+              Detalhe Histórico
+            </div>
+           <div class="panel-body" >
+            {% if  aluno.historicos %}
+             
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Instituicão</th>
+                    <th class="col-lg-1">Ano</th>
+                    <th class="col-md-2">Série</th>
+                    <th class="col-lg-1">Situação</th>
+                    <th class="col-lg-1"></th>
+                  </tr>
+                </thead>
+    
+                <tbody>
+                  {% for hs in historicos %} 
+                    <tr>
+                        <td>{{hs.instituicao.descricao}}</td>
+                        <td>{{hs.ano}}</td>
+                        <td>{{hs.serie.descricao}}</td>
+                        
+                        {% if hs.situacao %}
+                          <td>Aprovado</td>  
+                        {% else %}
+                          <td>Reprovado</td>
+                        {% endif %}
+                        <td><a href="{% url 'edicao-historico' hs.id %}">Editar</a></td>   
+                    </tr>
+                  {% endfor %}
+                </tbody>
+
+              </table>
+
+            {% else %}
+
+              <div class="alert alert-info">
+                  Não existe histórico cadastrado para esse aluno.       
+              </div>
+
+            {% endif %}
+    </div>
+</div>  
+  
+</form>
+
+{% endblock body %}
+
