@@ -25,7 +25,7 @@ SECRET_KEY = 'lp*0)!*@2m$sm9s636qux5sj2s%dxel%evq8c^1*n4)o6(d_^1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 DATE_FORMATS = ['%d/%m/%Y']
 
@@ -97,7 +97,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'escoladigital',
         'USER': 'root',
-        'PASSWORD': 'halex88966491',
+        'PASSWORD': 'root',
         'HOST': 'localhost', 
         'PORT': '3306'
     }
@@ -139,10 +139,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "escoladigital/static")
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "escoladigital/static"),
+    os.path.join(BASE_DIR, "static"),
 ]
 
 LOGIN_URL = '/login/'
