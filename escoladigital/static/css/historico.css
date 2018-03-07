@@ -15,6 +15,8 @@ h3{
 
 label{
   font-weight: bold;
+  margin:0;
+  padding: 0;
 }
 
 .h3-titulo{
@@ -109,5 +111,22 @@ h5{
 hr {
   border: 1px dashed black;
   width: 750px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.assinatura-sec {
+  margin-top: 10px;
+  float: left;
+}
+
+.assinatura-dir {
+  margin-top: 10px;
+  margin-bottom:0px;
+  float: right;
+}
+
+hr.assinatura{
+  border: 1px solid black;
+  width: 300px;
+  margin: 0;
 }

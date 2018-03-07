@@ -38,10 +38,9 @@
   	</table>
     <table align="right" class="titulo">
         
-        <tr style="background-color:#adadad; border-bottom:solid 1px;">
+        <tr style="background-color:#adadad; border-bottom:solid 1px; line-height:2;">
             <td colspan="4"><h3>HISTÓRICO ESCOLAR</h3></td>
         </tr>
-        
         <tr>
           <td colspan="2" style="width:150px" class="td-dados"><label>Aluno</label>: {{aluno.nome}}</td>
           <td class="td-dados"><label>Data Nascimento</label>: {{aluno.data_nascimento | date:'d/m/Y'}}</td>
@@ -150,7 +149,9 @@
         </tr>
 
         {% for historico in historicos %}
+         
           <tr>
+         
               <td class="td-dados ">{{historico.serie.descricao}}</td>
               <td class="td-dados ">{{historico.ano}}</td>
               <td class="td-dados ">{{historico.instituicao.descricao}}</td>
@@ -163,8 +164,8 @@
                 {% else %}
                 <td class="td-dados ">Reprovado</td>
               {% endif %}
-          
           </tr>
+
         {% endfor %}
 
     </table>
@@ -176,12 +177,17 @@
     <hr>
     <hr>
     <hr>
-    <hr>
-    <hr>
-    <hr>
-    <hr>
-    <hr>
 
+    <div class="assinatura-sec">
+      <hr class="assinatura">
+      <label>Secretário(a)</label>
+    </div>    
+
+
+    <div class="assinatura-dir">
+      <hr class="assinatura">
+      <label>Diretor(a)</label>
+    </div>
   	
   </body>
 </html>   
