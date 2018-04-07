@@ -40,7 +40,12 @@
 	      	<table class="table">
 	      		<tr>
 	      			<td><label>Nome</label>: {{ aluno.nome }}</td>
-	      			<td><label>Sexo</label>: Masculino
+					  <td><label>Sexo</label>: 
+						{% if aluno.sexo == 'M' %}
+							Masculino
+						{% else %}
+							Feminino
+						{% endif %}		
 	      			<label>Data de nascimento</label>: {{ aluno.data_nascimento|date:'d/m/Y' }}</td>
 	      		</tr>
 	      		
