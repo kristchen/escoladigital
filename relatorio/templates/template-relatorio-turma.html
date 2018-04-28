@@ -45,23 +45,25 @@
       </caption>
 
       <thead>
-          <th>Aluno</th>
-          <th>Data Nascimento</th>
-          <th>Turma</th>
+        <th></th>
+        <th>Aluno</th>
+        <th>Data Nascimento</th>
+        <th>Turma</th>
+        <th>Matrícula</th>
       </thead>
 
       <tbody>
           {% for mat in matriculas  %}
               <tr
-
               {% if forloop.counter|divisibleby:'2' %}
                 class="odd"
               {% endif %}
-
-              >
+              > 
+                  <td>{{ forloop.counter }}</td>
                   <td>{{mat.aluno.nome}}</td>
                   <td>{{mat.aluno.data_nascimento | date:'d/m/Y'}}</td>
                   <td>{{mat.turma.sequencia}}</td>
+                  <td>{{mat.numero}}</td>
               </tr>  
           {% endfor %}
       </tbody>

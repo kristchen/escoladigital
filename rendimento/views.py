@@ -63,10 +63,6 @@ def rendimento_turma(request, turma_id, disciplina_id, bimestre, tipo_nota):
 	
 	for matricula in matriculas:
 		notas = matricula.notas.filter(disciplina_id=disciplina_id).filter(bimestre=bimestre)
-		
-		# nota = [n for n in notas if n.tipo == long(tipo_nota)]
-		
-		# matricula.nota = nota[0] if nota else None
 
 		matricula.nota = next((n for n in notas if n.tipo == long(tipo_nota)), None)
 
@@ -85,10 +81,8 @@ def rendimento_turma_recuperacao_final(request, turma_id, disciplina_id):
 
 	confs = Configuracoes.objects.get(id=1)
 	media = confs.media
-	ano_letivo =  confs.ano_letivo
-	
+	ano_letivo = confs.ano_letivo
 	form = NotaForm()
-	
 	matriculas_recuperacao_final = []
 	matriculas = Matricula.objects.filter(turma_id=turma_id, ano=ano_letivo)
 

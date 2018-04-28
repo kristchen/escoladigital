@@ -13,7 +13,7 @@
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-collapse: collapse;
-    margin-bottom:1em;
+    margin-bottom:10em;
   }  
 
   table.titulo {
@@ -29,7 +29,7 @@
   }
 
   th, td {
-      padding: 0.5em 0.81em;
+      padding: 0.5em 0.68em;
       border-bottom: 1px solid #ccc;
       border-right: 1px solid #ccc;
       white-space: pre;
@@ -59,7 +59,7 @@ float: right;
 
 .divImage {
   height:auto;
-  width:35.7%;
+  width:35.2%;
   float:left;
   margin-top:10px;
 

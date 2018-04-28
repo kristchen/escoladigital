@@ -40,7 +40,7 @@
       </div>
       <ul class="list-group">
         <li class="list-group-item"><a href="{% url 'cadastro-historico' aluno.id %}">Histórico</a></li>
-        <li class="list-group-item"><a target="_blank" href="{% url 'boletim-aluno' aluno.id %}">Boletim</a></li>        <li class="list-group-item"><a href=" {% url 'declaracao-aluno' aluno.id %}">Declaração</a></li>
+        <li class="list-group-item"><a target="_new" href="{% url 'boletim-aluno' aluno.id %}">Boletim</a></li>        <li class="list-group-item"><a href=" {% url 'declaracao-aluno' aluno.id %}">Declaração</a></li>
         <li class="list-group-item"><a href="{% url 'matricula-aluno' aluno.id %}">Matrícula</a></li>
         <li class="list-group-item"><a href="{% url 'edicao-aluno' aluno.id %}">Alterar Dados Cadastrais</a></li>
       </ul>
@@ -51,7 +51,7 @@
 
 {% block body %}
 	
-<form action="{% url 'emitir-declaracao-aluno' aluno.id %}" method="POST" role="form">
+<form action="{% url 'emitir-declaracao-aluno' aluno.id %}" method="POST" role="form" target="_new">
   {% csrf_token %}
 
   <div class="panel panel-default">

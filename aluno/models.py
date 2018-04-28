@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.forms import ModelForm
 import datetime
+from util.utils import gerar_numero_matricula
 from simple_history.models import HistoricalRecords
 
 from escola.models import Turma
@@ -31,17 +32,22 @@ class Aluno(models.Model):
 	sexo = models.CharField(null=False, max_length=1)
 	history = HistoricalRecords()
 
+
 class Matricula(models.Model):
 	
 	aluno = models.ForeignKey(Aluno, related_name='matriculas')
 	turma = models.ForeignKey(Turma, related_name='alunos')
 	data_matricula = models.DateField(auto_now=False, default=datetime.date.today())
 	ano = models.PositiveIntegerField(null=False)
+	numero = models.CharField(null=False, unique=True, max_length=255, default=gerar_numero_matricula)
 	history = HistoricalRecords()
 		
 	class Meta(object):
 		unique_together = ('aluno','turma','ano')		
-				
+
+
+
+
 
 
 		

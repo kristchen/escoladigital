@@ -32,7 +32,7 @@
 
 {% block body %}
 	
-<form action="{% url 'emitir-relatorio-turma' %}" method="POST" role="form">
+<form action="{% url 'emitir-relatorio-turma' %}" method="POST" role="form"  target="_blank">
   {% csrf_token %}
   <div class="panel panel-default">
      <div class="panel-heading">

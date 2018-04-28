@@ -43,38 +43,41 @@
               
       {% else %}
 
+			<p>
+				{% with matricula.turma.serie.modalidade as modalidade  %}
+					Declaro para os devidos fins que 
+					
+					{% if aluno.sexo == 'M' %}
+							o aluno 
+					{% else %}
+							a aluna
+					{% endif %}		
 
-        {% with matricula.turma.serie.modalidade as modalidade  %}
-            
-        {% if matricula.ano == data|date:'Y' %}
-          
-          <p>Declaro para os devidos fins que o aluno <b>{{aluno.nome}}</b> está regularmente matriculado na presente instituição de ensino, cursando o <b> {{matricula.turma.serie.descricao}} do 
-          {% if modalidade == 'F'  %}
-            Ensino Fundamental.
-          {% else %}
-            Ensino Infantil.
-          {% endif %}
-          </b>
-          
-        {% else %}
+					<b>{{aluno.nome}}</b> 
+					está regularmente matriculado na presente instituição de ensino, cursando o 
+					<b> {{matricula.turma.serie.descricao}} do 
+          		{% if modalidade == 'F'  %}
+           					 Ensino Fundamental
+          		{% else %}
+											Ensino Infantil
+          		{% endif %}
+				{% endwith %}
+				
+				{% with matricula.turma.sequencia as sequencia  %}
+					no turno da 	
+							{% if sequencia == 'A' %}
+									Manhã.
+							{% else %}
+							Tarde.
+							{% endif %}
+				{% endwith %}
+				</b>
+			</p>
+    {% endif %}
 
-          <p>Declaro para os devidos fins que o aluno <b>{{aluno.nome}}</b>, no ano de <b>{{matricula.ano}}</b>, cursou na presente instituição de ensino o <b>{{matricula.turma.serie.descricao}} do 
-          {% if modalidade == 'F'  %}
-            Ensino Fundamental.
-          {% else %}
-            Ensino Infantil.
-          {% endif %}
-          </b>
-        
-        {% endif %}
+   
 
-        {% endwith %}
-
-      {% endif %}
-
-    </p>
-
-  		<p class="texto-direito"> Por ser verdade assino a presente declaração.</p>
+  	<p class="texto-direito"> Por ser verdade assino a presente declaração.</p>
   	<div>
 
   	<div class="assinatura">

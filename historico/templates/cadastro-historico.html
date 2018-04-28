@@ -31,7 +31,7 @@
   <ul class="list-group">
     <li class="list-group-item"><a href="{% url 'detalhe-historico'  aluno.id %}">Detalhe Histórico</a></li>
     <li class="list-group-item"><a href="{% url 'cadastro-historico' aluno.id %}">Cadastro Histórico</a></li>        
-    <li class="list-group-item"><a href=" {% url 'emitir-historico' aluno.id %} ">Emitir Histórico</a></li>
+    <li class="list-group-item"><a target="_new" href=" {% url 'emitir-historico' aluno.id %} ">Emitir Histórico</a></li>
   </ul>
 
 </div>
@@ -44,87 +44,84 @@
   {% csrf_token %}
   <input type="hidden" id="aluno" value="{{aluno.id}}"> 
   <div class="panel panel-default">
-           
-           <div class="panel-heading">
-              Cadastro De Histórico
-            </div>
-           <div class="panel-body" >
-            
-            <div class="row">
-              <div class="col-md-6">
-                <label for="instituicao">Instituição</label>
-                <input type="hidden" id="id_instituicao">
-                <input type="text" class="form-control" id="desc_instituicao" name="desc_instituicao" >
-              </div>
-              <div class="form-group col-md-4">
-                <label for="cidade">Cidade</label>
-                <input type="text" class="form-control" id="cidade" name="cidade" >
-              </div>
-              
-              <div class="form-group col-md-2">
-                <label for="uf">UF</label>
-                <select id="uf" name="uf" class="form-control" >
-                  <option>Selecione</option>
-                  {% for x, y in form.fields.uf.choices %} 
-                    <option value="{{x}}">{{y}}</option>
-                  {% endfor %}
-                </select>   
-              </div>
+      
+      <div class="panel-heading">
+        Cadastro De Histórico
+      </div>
+      <div class="panel-body" >
+      
+      <div class="row">
+        <div class="col-md-6">
+          <label for="instituicao">Instituição</label>
+          <input type="hidden" id="id_instituicao">
+          <input type="text" class="form-control" id="desc_instituicao" name="desc_instituicao" >
+        </div>
+        <div class="form-group col-md-4">
+          <label for="cidade">Cidade</label>
+          <input type="text" class="form-control" id="cidade" name="cidade" >
+        </div>
+        
+        <div class="form-group col-md-2">
+          <label for="uf">UF</label>
+          <select id="uf" name="uf" class="form-control" >
+            <option>Selecione</option>
+            {% for x, y in form.fields.uf.choices %} 
+              <option value="{{x}}">{{y}}</option>
+            {% endfor %}
+          </select>   
+        </div>
 
-            </div>
+      </div>
 
+      <div class="row">
+        <div class="form-group col-md-3">
+          <label for="ano">Ano</label>
+          <select id="ano" name="ano" class="form-control" >
+            <option value="">Selecione</option>
+            {% for x, y in form.fields.ano.choices %} 
+              <option value="{{x}}">{{y}}</option>
+            {% endfor %}
+          </select>   
+        </div>
 
-            <div class="row">
-              <div class="form-group col-md-3">
-                <label for="ano">Ano</label>
-                <select id="ano" name="ano" class="form-control" >
-                  <option value="">Selecione</option>
-                  {% for x, y in form.fields.ano.choices %} 
-                    <option value="{{x}}">{{y}}</option>
-                  {% endfor %}
-                </select>   
-              </div>
+          <div class="form-group col-md-3">
+          <label for="serie">Série</label>
+          <select id="serie" name="serie" class="form-control" >
+              <option value="">Selecione</option>
+            {% for x in form.fields.serie.queryset %} 
+              <option value="{{x.id}}">{{x.descricao}}</option>
+            {% endfor %}
+          </select>   
+        </div>
 
-               <div class="form-group col-md-3">
-                <label for="serie">Série</label>
-                <select id="serie" name="serie" class="form-control" >
-                    <option value="">Selecione</option>
-                  {% for x in form.fields.serie.queryset %} 
-                    <option value="{{x.id}}">{{x.descricao}}</option>
-                  {% endfor %}
-                </select>   
-              </div>
-  
-              <div class="form-group col-md-2">
-                <label for="ano">Carga Horária</label>
-                <input type="text" class="form-control" id="carga" name="carga">
-              </div>
+        <div class="form-group col-md-2">
+          <label for="ano">Carga Horária</label>
+          <input type="text" class="form-control" id="carga" name="carga">
+        </div>
 
-               <div class="form-group col-md-3">
-                <label for="situacao">Situação</label>
-                <select id="situacao" name="situacao" class="form-control" >
-                    <option value="">Selecione</option>
-                  {% for x,y in form.fields.situacao.choices %} 
-                    <option value="{{x}}">{{y}}</option>
-                  {% endfor %}
-                </select>   
-              </div>
+          <div class="form-group col-md-3">
+          <label for="situacao">Situação</label>
+          <select id="situacao" name="situacao" class="form-control" >
+              <option value="">Selecione</option>
+            {% for x,y in form.fields.situacao.choices %} 
+              <option value="{{x}}">{{y}}</option>
+            {% endfor %}
+          </select>   
+        </div>
 
-              </div>
-
+        </div>
     </div>
 </div>  
 
 <div class="panel panel-default">
            
-           <div class="panel-heading">
-              Disciplinas
-           </div>
-           
-           <div class="panel-body" id="divDisciplinas">
-                
+    <div class="panel-heading">
+      Disciplinas
+    </div>
+    
+    <div class="panel-body" id="divDisciplinas">    
 
-           </div>
+    </div>
 </div>  
   
 </form>
