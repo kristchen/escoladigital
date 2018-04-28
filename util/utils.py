@@ -22,4 +22,4 @@ def gerar_PDF(request, context, str_template, filename):
 
 def gerar_numero_matricula():
 	ano = str(datetime.date.today().year % 100)
-	return ano + str(randint(10000, 99999))
+	return ano + str(randint(1000, 9999))
