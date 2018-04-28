@@ -84,7 +84,7 @@ def matricular_aluno(request, aluno_id):
 	ano_letivo =  Configuracoes.objects.get(id=1).ano_letivo
 	matriculas = aluno.matriculas.filter(ano=ano_letivo)
 	matricula_atual = matriculas[0] if matriculas else None
-	
+
 	if form.is_valid():
 		dados = form.cleaned_data
 		turma = dados['turma']

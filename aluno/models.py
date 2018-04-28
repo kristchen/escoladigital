@@ -39,15 +39,15 @@ class Matricula(models.Model):
 	turma = models.ForeignKey(Turma, related_name='alunos')
 	data_matricula = models.DateField(auto_now=False, default=datetime.date.today())
 	ano = models.PositiveIntegerField(null=False)
-	id = models.AutoField(primary_key=True)
-	numero = models.CharField(null=False, unique=True, max_length=255, default='00000')
+	numero = models.CharField(unique=True, max_length=255, default='0')
 	history = HistoricalRecords()
 		
 	class Meta(object):
 		unique_together = ('aluno','turma','ano')
 
 	def save(self, *args, **kwargs):
-		self._numero = gerar_numero_matricula() + str(self._id)
+		if self.numero == '0':
+			self.numero = gerar_numero_matricula()
 		super(Matricula, self).save(*args, **kwargs)
 
 

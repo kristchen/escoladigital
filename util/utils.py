@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from weasyprint import HTML, CSS
 import datetime
+from escola.models import Configuracoes
 from random import randint
 
 
@@ -21,5 +22,7 @@ def gerar_PDF(request, context, str_template, filename):
 
 
 def gerar_numero_matricula():
-	ano = str(datetime.date.today().year % 100)
-	return ano + str(randint(1000, 9999))
+	data = datetime.datetime.today()
+	ano_letivo =  Configuracoes.objects.get(id=1).ano_letivo 
+	ano = str(ano_letivo % 100)
+	return ano + str(data.microsecond)
