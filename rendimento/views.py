@@ -124,15 +124,15 @@ def boletim_aluno(request, aluno_id):
 		disciplinas = [ x.disciplina for x in matricula.turma.serie.curriculos.all() if x.ativo and not x.disciplina.somente_historico]
 
 		if matricula.turma.serie.modalidade != MODALIDADE_INFANTIL:
-			template_boletim = 'boletim-aluno-fundamental'
+			template_boletim = 'template-boletim-aluno-fundamental'
 			for dis in disciplinas:
 				gerar_boletim_fundamental(dis, matricula.notas.all(), media)
 		else:
-			template_boletim = 'boletim-aluno-infantil'
+			template_boletim = 'template-boletim-aluno-infantil'
 			for dis in disciplinas:
 				gerar_boletim_infantil(dis, matricula.notas.all())
 			
-	context =  {'disciplinas':disciplinas, 'matricula':matricula, 'data':datetime.now()}
+	context =  {'disciplinas':disciplinas, 'matricula':matricula, 'data':datetime.now(), 'ano_letivo':ano_letivo}
 
 	return gerar_PDF(request, context, template_boletim, 'boletim-'+matricula.aluno.nome)
 

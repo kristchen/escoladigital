@@ -25,7 +25,7 @@ def emitir_relatorio_turma(request):
 
 		matriculas = [turma.alunos.filter(ano=confs.ano_letivo) for turma in turmas]
 		matriculas = list(chain.from_iterable(matriculas))
-		matriculas.sort(key=lambda mat : mat.aluno.nome, reverse=True)
+		matriculas.sort(key=lambda mat : mat.aluno.nome, reverse=False)
 		context = {'matriculas':matriculas, 'turma':next(iter(turmas),None), 'sequencia':dados['sequencia'], 'conf':confs}
 		
 		return gerar_PDF(request, context, 'template-relatorio-turma', 'relatorio')

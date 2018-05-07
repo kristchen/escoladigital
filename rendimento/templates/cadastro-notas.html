@@ -20,17 +20,8 @@
 {% endblock message%}
 
 
-  {% block options %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-          Opções
-        </div>
-        <ul class="list-group">
-          <li class="list-group-item"><a href="{% url 'cadastro-notas' %}"> Notas Regulares</a></li>
-          <li class="list-group-item"><a href="{% url 'cadastro-notas-recuperacao-final' %}"> Recuperação Final</a></li>
-          <li class="list-group-item"> Ano Letivo Atual: <b>{{ano}}</b> </li>
-        </ul>
-     </div>
+{% block options %}
+  {% include "include-opcoes-rendimento.html" %}
 {% endblock options %}
 
 

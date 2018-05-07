@@ -16,21 +16,7 @@
 
 
 {% block options %}
-
-<div class="panel panel-default">
-           
-  <div class="panel-heading">
-    Opções
-  </div>
-
-  <ul class="list-group">
-    <li class="list-group-item"><a href="{% url 'detalhe-historico'  aluno.id %}">Detalhe Histórico</a></li>
-    <li class="list-group-item"><a href="{% url 'cadastro-historico' aluno.id %}">Cadastro Histórico</a></li>        
-    <li class="list-group-item"><a href=" {% url 'emitir-historico' aluno.id %} ">Emitir Histórico</a></li>
-  </ul>
-
-</div>
-
+{% include "include-opcoes-historico.html" %}
 {% endblock options %}
 
 {% block body %}

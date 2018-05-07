@@ -9,15 +9,15 @@
   }
 
   table.notas {
-    width: 400px;
+    width: 100%;
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-collapse: collapse;
-    margin-bottom:10em;
+    margin-bottom:1em;
   }  
 
   table.titulo {
-    width: 450px;
+    width: 76%;
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-collapse: collapse;
@@ -43,7 +43,6 @@
 
 fieldset {
     border: 1px solid #e0e0e0;
-    padding: 10 0;
     text-align: left;
     width: 97%;
 }
@@ -59,7 +58,7 @@ float: right;
 
 .divImage {
   height:auto;
-  width:35.2%;
+  width: auto;
   float:left;
   margin-top:10px;
 

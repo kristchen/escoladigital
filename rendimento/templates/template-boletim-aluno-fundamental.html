@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta "charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="{% static "/css/boletim_fundamental.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "/css/boletim.css" %}">
 </head>
   <body> 
         <div class="divImage">
@@ -28,7 +28,7 @@
             {% endif %}
 
             <td><label>Turno</label>: M</td>
-            <td><label>Ano Letivo</label>: 2017</td>
+            <td><label>Ano Letivo</label>: {{ano_letivo}}</td>
           </tr>
         </table> 
 
@@ -94,27 +94,17 @@
 
                   </tr>
                   {% endfor %}
-
-                  <tr>
-                      <td>Classificação Na Turma</td>
-                      <td colspan="2"><label>1°</label></td>
-                      <td colspan="2"><label>4°</label></td>
-                      <td colspan="2"><label>5°</label></td>
-                      <td colspan="2"><label>2°</label></td>
-                      <td colspan="3"></td>
-                  </tr>
-
               </tbody>
           </table>
           <fieldset>
-                  <label>MB:</label>    Média Bimestral   |
-                  <label>MF:</label>    Média Final   |
-                  <label>R:</label>     Recuperação   |
-                  <label>RF:</label>    Recuperação Final   |
-                  <label>*:</label>     Notas Abaixo Da Média   |
-                  <br><label>ST:</label>    Situação   |
-                  <label>APR:</label>   Aprovado   |
-                  <label>REP:</label>   Reprovado   |
+                  <label>MB:</label>Média Bimestral   |
+                  <label>MF:</label>Média Final   |
+                  <label>R:</label>Recuperação   |
+                  <label>RF:</label>Recuperação Final   |
+                  <label>*:</label>Notas Abaixo Da Média   |
+                  <br><label>ST:</label>Situação   |
+                  <label>APR:</label>Aprovado   |
+                  <label>REP:</label>Reprovado   |
           </fieldset> 
        
           <div class="assinatura">

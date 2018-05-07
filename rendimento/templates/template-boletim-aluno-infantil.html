@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta "charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="{% static "/css/boletim_fundamental.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "/css/boletim.css" %}">
 </head>
   <body> 
         <div class="divImage">
@@ -13,7 +13,7 @@
         </div>
         <table align="right" class="titulo">
           <tr style="background-color:#adadad;">
-              <td colspan="6"><h3>BOLETIM ESCOLAR</h3></td>
+              <td colspan="3"><h3>COLÉGIO BATISTA MONTE SINAI - BOLETIM ESCOLAR</h3></td>
           </tr>
           <tr>
             <td><label>Aluno</label>: {{matricula.aluno.nome}}</td>
@@ -28,7 +28,7 @@
             {% endif %}
 
             <td><label>Turno</label>: M</td>
-            <td><label>Ano Letivo</label>: 2017</td>
+            <td><label>Ano Letivo</label>: {{ano_letivo}}</td>
           </tr>
         </table> 
 
