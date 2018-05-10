@@ -74,6 +74,8 @@ def rendimento_turma(request, turma_id, disciplina_id, bimestre, tipo_nota):
 
 	matriculas = matriculas_recuperacao if int(tipo_nota) == choices.RECUPERACAO else matriculas 
 
+	matriculas = sorted(matriculas, key=lambda mat: mat.aluno.nome, reverse=False)
+
 	return render(request, 'rendimento-turma.html', {'matriculas':matriculas, 'form':form})
 
 @login_required
@@ -105,6 +107,8 @@ def rendimento_turma_recuperacao_final(request, turma_id, disciplina_id):
 				nota_recuperacao_final = [n for n in notas if n.bimestre == choices.RECUPERACAO_FINAL and n.tipo == choices.RECUPERACAO]
 				matricula.nota = nota_recuperacao_final[0] if nota_recuperacao_final else None
 				matriculas_recuperacao_final.append(matricula)
+
+	matriculas = sorted(matriculas, key=lambda mat: mat.aluno.nome, reverse=False)
 
 	return render(request, 'rendimento-turma.html', {'matriculas':matriculas_recuperacao_final, 'form':form})
 
