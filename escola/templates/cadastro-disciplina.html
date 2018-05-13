@@ -69,7 +69,7 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th class="col-sm-3" >Descrição</th>
+            <th class="col-sm-3">Descrição</th>
             <th >Situação</th>
             <th class="col-sm-1"></th>
             <th class="col-sm-1"></th>
@@ -79,15 +79,15 @@
         <tbody >
           {% for disciplina in  disciplinas %}
             <tr id="{{disciplina.id}}">
-              <td>{{disciplina.descricao}}</td>
+              <td class="col-sm-3">{{disciplina.descricao}}</td>
               <td> {% if disciplina.ativa %}
                       Ativa
                     {% else %}
                       Inativa
                    {% endif %}
               </td>
-              <td><a href="{% url 'edicao-disciplina' disciplina.id %}">Editar</a></td>
-              <td>
+              <td class="col-sm-1"><a href="{% url 'edicao-disciplina' disciplina.id %}">Editar</a></td>
+              <td class="col-sm-1">
                 {% if disciplina.ativa %}
                       <a class="status" href="javascript:void(0)">Inativar</a>
                     {% else %}

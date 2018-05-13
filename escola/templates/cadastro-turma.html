@@ -80,7 +80,7 @@
         <thead>
           <tr>
             <th class="col-sm-2" >Descrição</th>
-            <th class="col-sm-1">Sequência</th>
+            <th class="col-sm-2">Sequência</th>
             <th >Situação</th>
             <th class="col-sm-1"></th>
           </tr>
@@ -89,15 +89,15 @@
         <tbody >
           {% for turma in  turmas %}
             <tr id="{{turma.id}}">
-              <td>{{turma.serie.descricao}}</td>
-              <td>{{turma.sequencia}}</td>
+              <td class="col-sm-2">{{turma.serie.descricao}}</td>
+              <td class="col-sm-2">{{turma.sequencia}}</td>
               <td> {% if turma.ativa %}
                       Ativa
                     {% else %}
                       Inativa
                    {% endif %}
             </td>
-              <td>
+              <td class="col-sm-1">
                 {% if turma.ativa %}
                       <a class="status" href="javascript:void(0)">Inativar</a>
                     {% else %}

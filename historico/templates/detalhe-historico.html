@@ -46,16 +46,16 @@
                 <tbody>
                   {% for hs in historicos %} 
                     <tr>
-                        <td>{{hs.instituicao.descricao}}</td>
-                        <td>{{hs.ano}}</td>
-                        <td>{{hs.serie.descricao}}</td>
+                        <td >{{hs.instituicao.descricao}}</td>
+                        <td class="col-lg-1">{{hs.ano}}</td>
+                        <td class="col-md-2">{{hs.serie.descricao}}</td>
                         
                         {% if hs.situacao %}
-                          <td>Aprovado</td>  
+                          <td class="col-lg-1">Aprovado</td>  
                         {% else %}
-                          <td>Reprovado</td>
+                          <td class="col-lg-1">Reprovado</td>
                         {% endif %}
-                        <td><a href="{% url 'edicao-historico' hs.id %}">Editar</a></td>   
+                        <td class="col-lg-1"><a href="{% url 'edicao-historico' hs.id %}">Editar</a></td>   
                     </tr>
                   {% endfor %}
                 </tbody>

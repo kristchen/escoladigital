@@ -1,0 +1,56 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+{% block message %}  
+
+  <div class="alert alert-danger" id="alert" style="display:none">
+      <button type="button" class="close">×</button>
+      Pelo menos um aluno da turma deve ser escolhido.
+  </div>
+
+{% endblock message%}
+
+
+{% block options %}
+    {% include "include-opcoes-rendimento.html" %}
+{% endblock options %}
+
+
+{% block body %}
+<form role="form" method="POST" target="_new" id="form">
+  {% csrf_token %}
+
+  <div class="panel panel-default">
+           
+      <div class="panel-heading">
+       Emissão Boletim
+      </div>
+      <div class="panel-body" >
+          <div id="filtros" class="row">
+            <div class="form-group col-md-3">
+              <label for="turma">Turma</label>
+              <select id="turma" name="turma" class="busca form-control" >
+                  <option value="">Selecione</option>
+                  {% for x in turmas %} 
+                    <option value="{{x.id}}">{{x.serie.descricao}} - {{x.sequencia}}
+                    </option>
+                  {% endfor %}
+              </select>   
+            </div>            
+          </div>
+      </div>
+  </div>      
+
+  <div class="panel panel-default" style="margin-top:10px; display:none">
+
+    <div class="panel-heading">Alunos</div>
+
+    <div class="panel-body" id="divAluno">
+    
+    </div>
+
+  </div>
+
+</form>
+{% load staticfiles %}
+  <script type="text/javascript" src="{% static "js/boletim.js" %}"></script>
+{% endblock body %}

@@ -1,0 +1,40 @@
+
+{% if matriculas %}
+	<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Nome</th>
+			<th class="col-sm-1">
+				<input type="checkbox" id="check-all">
+			</th>
+		</tr>
+	</thead>
+	
+	<tbody >
+		{% for mat in matriculas %}
+			<tr>
+				<td>{{mat.aluno.nome}}</td>
+				<td class="col-sm-1">
+          <input type="checkbox" name="aluno" value="{{mat.id}}"> 
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+
+</table>
+  
+<div class="row" style="margin-top:10px; margin-bottom:20px;">
+  <div class="col-md-12 text-center">
+    <button id="btn-emitir" type="button" class="btn btn-primary">Emitir</button>
+  </div>
+</div>
+
+{% else %}
+	
+<div class="alert alert-info">
+    A consulta não trouxe resultados
+</div>
+
+{% endif %}
+
+

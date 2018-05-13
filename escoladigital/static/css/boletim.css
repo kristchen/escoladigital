@@ -1,4 +1,9 @@
-@media print{ @page {size: A4 portrait; margin: 0 auto; padding: 0;}}
+@media print{ @page {size: A4 portrait; margin: 0 auto; padding: 0;}
+
+
+}
+
+.pagebreak { page-break-before: always; }   
 
   body {
     padding: 1.5%;

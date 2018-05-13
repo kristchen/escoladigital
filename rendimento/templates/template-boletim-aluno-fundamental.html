@@ -5,6 +5,8 @@
 <link rel="stylesheet" type="text/css" href="{% static "/css/boletim.css" %}">
 </head>
   <body> 
+  {% for matricula in matriculas  %}
+    
         <div class="divImage">
              <img src="{% static "/images/emblema.png" %}">    
         </div>
@@ -62,7 +64,7 @@
                 <tr>
               </thead>
               <tbody>
-                  {% for dis in disciplinas  %}
+                  {% for dis in matricula.disciplinas %}
                   <tr>
                       <td>{{dis.descricao}}</td>
                       {% for bimestre in dis.notas %}
@@ -111,6 +113,7 @@
             <hr/>
             <label>Coordenador</label>
           </div>
-       
+          <div class="pagebreak"></div>
+{% endfor %}     
         </body>
 </html>    

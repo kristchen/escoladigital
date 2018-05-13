@@ -20,7 +20,6 @@ import numpy as np
 import json
 from datetime import datetime
 
-
 @login_required
 def cadastro_notas(request):
 	confs = Configuracoes.objects.get(id=1)
@@ -31,7 +30,8 @@ def cadastro_notas(request):
 def cadastro_notas_recuperacao_final(request):
 	confs = Configuracoes.objects.get(id=1)
 	form = NotaForm()
-	return render(request, 'cadastro-notas-recuperacao-final.html', {'ano':confs.ano_letivo,'choices':choices, 'turmas':Turma.objects.all()})
+	context = {'ano':confs.ano_letivo,'choices':choices, 'turmas':Turma.objects.all(), 'form':form}
+	return render(request, 'cadastro-notas-recuperacao-final.html', context)
 
 @login_required
 def cadastrar_notas(request):
@@ -39,7 +39,7 @@ def cadastrar_notas(request):
 	data = json.loads(json.dumps(request.POST))
 	for notaJSON in json.loads(data.get('notas')):
 		matricula = Matricula.objects.get(id=notaJSON['matricula'])
-		nota = matricula.notas.filter(disciplina_id=notaJSON['disciplina']).filter(bimestre=notaJSON['bimestre']).filter(tipo=notaJSON['tipo'])
+		nota = matricula.notas.filter(disciplina_id=notaJSON['disciplina'], bimestre=notaJSON['bimestre'], tipo=notaJSON['tipo'])
    		if nota:
    			nota = nota[0]
    			nota.valor = notaJSON['valor']
@@ -49,13 +49,52 @@ def cadastrar_notas(request):
    		nota.save()	
 	return HttpResponse('{"sucess":true}', content_type='application/json') 
 
+@login_required
+def boletim(request):
+	turmas = Turma.objects.all()
+	return render(request, 'boletim.html', {'turmas':turmas})
+
+@login_required
+def boletim_turma(request, turma_id):
+	confs = Configuracoes.objects.get(id=1)
+	ano_letivo = confs.ano_letivo
+	matriculas = Matricula.objects.filter(turma_id=turma_id, ano=ano_letivo)
+	context = {'matriculas':matriculas}
+
+	return render(request, 'boletim-turma.html', context)
+
+@login_required
+def emitir_boletim_turma(request, turma_id): 
+	alunos = request.POST.getlist(u'aluno')
+	confs = Configuracoes.objects.get(id=1)
+	media = confs.media
+	ano_letivo =  confs.ano_letivo
+	template_boletim = ''
+	matriculas = Matricula.objects.filter(turma_id=turma_id, ano=ano_letivo, id__in=map(int, alunos))
+
+	for matricula in matriculas:
+		disciplinas = [ x.disciplina for x in matricula.turma.serie.curriculos.all() if x.ativo and not x.disciplina.somente_historico]
+
+		if matricula.turma.serie.modalidade != MODALIDADE_INFANTIL:
+			template_boletim = 'template-boletim-aluno-fundamental'
+			for dis in disciplinas:
+				gerar_boletim_fundamental(dis, matricula.notas.all(), media)
+		else:
+			template_boletim = 'template-boletim-aluno-infantil'
+			for dis in disciplinas:
+				gerar_boletim_infantil(dis, matricula.notas.all())
+		
+		matricula.disciplinas = disciplinas
+			
+	context =  {'matriculas':matriculas, 'data':datetime.now(), 'ano_letivo':ano_letivo}
+
+	return gerar_PDF(request, context, template_boletim, 'boletim-turma')
 
 @login_required
 def rendimento_turma(request, turma_id, disciplina_id, bimestre, tipo_nota):
 	confs = Configuracoes.objects.get(id=1)
 	media = confs.media
 	ano_letivo =  confs.ano_letivo
-	
 	form = NotaForm()
 	
 	matriculas_recuperacao = []
@@ -73,7 +112,6 @@ def rendimento_turma(request, turma_id, disciplina_id, bimestre, tipo_nota):
 		   		matriculas_recuperacao.append(matricula)
 
 	matriculas = matriculas_recuperacao if int(tipo_nota) == choices.RECUPERACAO else matriculas 
-
 	matriculas = sorted(matriculas, key=lambda mat: mat.aluno.nome, reverse=False)
 
 	return render(request, 'rendimento-turma.html', {'matriculas':matriculas, 'form':form})
@@ -90,7 +128,7 @@ def rendimento_turma_recuperacao_final(request, turma_id, disciplina_id):
 
 	for matricula in matriculas:
 		medias_bimestrais = []
-		notas = matricula.notas.filter(matricula_id=matricula).filter(disciplina_id=disciplina_id)
+		notas = matricula.notas.filter(matricula_id=matricula, disciplina_id=disciplina_id)
 		
 		if len(notas) >= 12: # Todas as notas precisam estar cadastradas, cada tipo
 			for x, y in choices.BIMESTRE_CHOICES:
@@ -113,34 +151,6 @@ def rendimento_turma_recuperacao_final(request, turma_id, disciplina_id):
 	return render(request, 'rendimento-turma.html', {'matriculas':matriculas_recuperacao_final, 'form':form})
 
 
-@login_required
-def boletim_aluno(request, aluno_id):
-	confs = Configuracoes.objects.get(id=1)
-	media = confs.media
-	ano_letivo =  confs.ano_letivo
-	template_boletim = ''
-	matricula_atual  = Matricula.objects.filter(aluno_id=aluno_id, ano=ano_letivo)
-	disciplinas = None
-	matricula = None
-
-	if matricula_atual:
-		matricula = matricula_atual[0]
-		disciplinas = [ x.disciplina for x in matricula.turma.serie.curriculos.all() if x.ativo and not x.disciplina.somente_historico]
-
-		if matricula.turma.serie.modalidade != MODALIDADE_INFANTIL:
-			template_boletim = 'template-boletim-aluno-fundamental'
-			for dis in disciplinas:
-				gerar_boletim_fundamental(dis, matricula.notas.all(), media)
-		else:
-			template_boletim = 'template-boletim-aluno-infantil'
-			for dis in disciplinas:
-				gerar_boletim_infantil(dis, matricula.notas.all())
-			
-	context =  {'disciplinas':disciplinas, 'matricula':matricula, 'data':datetime.now(), 'ano_letivo':ano_letivo}
-
-	return gerar_PDF(request, context, template_boletim, 'boletim-'+matricula.aluno.nome)
-
-
 def gerar_boletim_infantil(dis, notas_matricula):
 	dis.notas = np.full([4,1], None)
 
@@ -151,7 +161,6 @@ def gerar_boletim_infantil(dis, notas_matricula):
 	for key, grupo in grupo_notas_bimestre:
 		conceito = int([n for n in grupo][0].valor)
 		dis.notas[key - 1][0] = dict(choices.NOTA_CONCEITO_CHOICES).get(conceito)
-		print dis.notas[key - 1][0]
 
 
 def gerar_boletim_fundamental(dis, notas_matricula, media):

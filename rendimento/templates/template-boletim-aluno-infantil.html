@@ -5,78 +5,82 @@
 <link rel="stylesheet" type="text/css" href="{% static "/css/boletim.css" %}">
 </head>
   <body> 
-        <div class="divImage">
-             <img src="{% static "/images/emblema.png" %}">    
-        </div>
-        <div class="data-emissao">
-        <label>Data de emissão</label>: {{data|date:'d/m/Y'}}
-        </div>
-        <table align="right" class="titulo">
-          <tr style="background-color:#adadad;">
-              <td colspan="3"><h3>COLÉGIO BATISTA MONTE SINAI - BOLETIM ESCOLAR</h3></td>
-          </tr>
+  
+    {% for matricula in matriculas  %}
+    
+    <div class="divImage">
+      <img src="{% static "/images/emblema.png" %}">    
+    </div>
+    <div class="data-emissao">
+      <label>Data de emissão</label>: {{data|date:'d/m/Y'}}
+    </div>
+    <table align="right" class="titulo">
+      <tr style="background-color:#adadad;">
+        <td colspan="3"><h3>COLÉGIO BATISTA MONTE SINAI - BOLETIM ESCOLAR</h3></td>
+      </tr>
+      <tr>
+        <td><label>Aluno</label>: {{matricula.aluno.nome}}</td>
+        <td><label>Turma</label>: {{matricula.turma.sequencia}}</td>
+        <td><label>Serie</label>: {{matricula.turma.serie.descricao}}</td>
+      </tr>
+      <tr>
+        {% if matricula.turma.serie.modalidade == 'F' %}
+        <td><label>Modalidade</label>: Ensino Fundamental</td>  
+        {% else %}
+        <td><label>Modalidade</label>: Ensino Infantil</td>
+        {% endif %}
+        
+        <td><label>Turno</label>: M</td>
+        <td><label>Ano Letivo</label>: {{ano_letivo}}</td>
+      </tr>
+    </table> 
+    
+    <table align="left" class="notas">
+      <thead>
+        <tr style="background-color:#adadad;">
+          <th>Disciplina</th>
+          <th >1° Bimestre</th>
+          <th >2° Bimestre</th>
+          <th >3° Bimestre</th>
+          <th >4° Bimestre</th>
+        </tr>
+        <tr>
+          <th style="width:158px;"></th>
+          <th style="width:120px;" >Média Bimestral</th>
+          
+          
+          <th style="width:120px;" >Média Bimestral</th>
+          
+          
+          <th style="width:120px;" >Média Bimestral</th>
+          
+          
+          <th style="width:120px;" >Média Bimestral</th>
+          
           <tr>
-            <td><label>Aluno</label>: {{matricula.aluno.nome}}</td>
-            <td><label>Turma</label>: {{matricula.turma.sequencia}}</td>
-            <td><label>Serie</label>: {{matricula.turma.serie.descricao}}</td>
-          </tr>
-          <tr>
-            {% if matricula.turma.serie.modalidade == 'F' %}
-                <td><label>Modalidade</label>: Ensino Fundamental</td>  
+          </thead>
+          <tbody>
+            {% for dis in matricula.disciplinas  %}
+            <tr>
+              <td>{{dis.descricao}}</td>
+              {% for bimestre in dis.notas %}
+              {% for nota in bimestre  %}
+              {% if nota %}
+              <td>{{nota}}</td>
               {% else %}
-                <td><label>Modalidade</label>: Ensino Infantil</td>
-            {% endif %}
-
-            <td><label>Turno</label>: M</td>
-            <td><label>Ano Letivo</label>: {{ano_letivo}}</td>
-          </tr>
-        </table> 
-
-        <table align="left" class="notas">
-              <thead>
-                <tr style="background-color:#adadad;">
-                  <th>Disciplina</th>
-                  <th >1° Bimestre</th>
-                  <th >2° Bimestre</th>
-                  <th >3° Bimestre</th>
-                  <th >4° Bimestre</th>
-                </tr>
-                <tr>
-                  <th style="width:158px;"></th>
-                  <th style="width:120px;" >Média Bimestral</th>
-                  
-                  
-                  <th style="width:120px;" >Média Bimestral</th>
-                  
-                  
-                  <th style="width:120px;" >Média Bimestral</th>
-                  
-
-                  <th style="width:120px;" >Média Bimestral</th>
-
-                <tr>
-              </thead>
-              <tbody>
-                {% for dis in disciplinas  %}
-                  <tr>
-                    <td>{{dis.descricao}}</td>
-                      {% for bimestre in dis.notas %}
-                        {% for nota in bimestre  %}
-                           {% if nota %}
-                              <td>{{nota}}</td>
-                           {% else %}
-                              <td></td>
-                           {% endif %}
-                        {% endfor %}
-                      {% endfor %}
-                    </tr>
-                {% endfor %}
-              </tbody>
-          </table>
-          <div class="assinatura">
-            <hr/>
-            <label>Coordenador</label>
-          </div>
-       
-        </body>
+              <td></td>
+              {% endif %}
+              {% endfor %}
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="assinatura">
+          <hr/>
+          <label>Coordenador</label>
+        </div>
+        <div class="pagebreak"></div>
+    {% endfor %}
+      </body>
 </html>    
