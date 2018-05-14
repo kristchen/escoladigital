@@ -29,7 +29,12 @@
                 <td><label>Modalidade</label>: Ensino Infantil</td>
             {% endif %}
 
-            <td><label>Turno</label>: M</td>
+            {% if matricula.turma.sequencia == 'A' %}
+              <td><label>Turno</label>:M</td> 
+            {% else %}
+              <td><label>Turno</label>:T</td>
+            {% endif %}
+        
             <td><label>Ano Letivo</label>: {{ano_letivo}}</td>
           </tr>
         </table> 
