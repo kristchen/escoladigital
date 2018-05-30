@@ -1,1 +1,38 @@
-{% extends 'escoladigital/templates/base-dashboard.html' %}
+{% extends 'escoladigital/templates/base.html' %}
+
+{% block options %}
+    {% include "include-opcoes-home.html" %}
+{% endblock options %}
+
+
+{% block body %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Visão Geral - {{confs.ano_letivo}}</h3>
+    </div>
+     <div class="panel-body">
+         
+        <div class="row">
+            <div class="col-md-3">
+                 <div class="well dash-box">
+                     <h2><span class="glyphicon glyphicon-education" aria-hidden="true"></span> {{total}}</h2>
+                     <h4>Alunos Matrículados</h4>
+                 </div>
+             </div>
+             <div class="col-md-9">
+                    <embed type="image/svg+xml" src="{{ chart_series|safe }}"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <embed type="image/svg+xml" src="{{ chart_modalidade|safe }}"/>
+            </div>
+            <div class="col-md-6">
+                <embed type="image/svg+xml" src="{{ chart_turno|safe }}"/>
+            </div>
+        </div>
+    </div>
+</div>  
+
+{% endblock body %}

@@ -51,8 +51,9 @@ def cadastrar_notas(request):
 
 @login_required
 def boletim(request):
+	confs = Configuracoes.objects.get(id=1)
 	turmas = Turma.objects.all()
-	return render(request, 'boletim.html', {'turmas':turmas})
+	return render(request, 'boletim.html', {'turmas':turmas, 'ano':confs.ano_letivo})
 
 @login_required
 def boletim_turma(request, turma_id):
