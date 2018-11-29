@@ -4,6 +4,9 @@ from weasyprint import HTML, CSS
 import datetime
 from escola.models import Configuracoes
 from random import randint
+import math
+import decimal
+
 
 
 def gerar_PDF(request, context, str_template, filename):
@@ -26,3 +29,10 @@ def gerar_numero_matricula():
 	ano_letivo =  Configuracoes.objects.get(id=1).ano_letivo 
 	ano = str(ano_letivo % 100)
 	return ano + str(data.microsecond)
+
+
+def normal_round(n):
+	if n - decimal.Decimal(math.floor(n)) < 0.6:
+		return n
+	else:
+		return math.ceil(n)

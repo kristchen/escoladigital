@@ -1,5 +1,7 @@
 body{
     background-color: #ECECEA;
+    margin: 0;
+    padding: 0;
 }
 
 #colorful-nav {
@@ -8,7 +10,6 @@ body{
     float: none;
     padding-left: 3px;
 }
-
 
 #colorful-nav .navbar {
     margin-bottom: 0px;

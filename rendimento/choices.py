@@ -3,6 +3,7 @@ NOTA_PARCIAL = 1
 NOTA_BIMESTRAL = 2
 RECUPERACAO = 3
 NOTA_EXTRA = 4
+RECUPERACAO_FINAL = 5
 
 TIPO_NOTA_CHOICES = (
 	(NOTA_PARCIAL, 'Nota Parcial'),
@@ -17,8 +18,6 @@ BIMESTRE_CHOICES = (
 	(3, '3° Bimestre'),
 	(4, '4° Bimestre')	
 )
-
-RECUPERACAO_FINAL = 5
 
 NOTA_CONCEITO_CHOICES = (
 	(4, 'Precisa Melhorar'),

@@ -13,9 +13,10 @@ from aluno.models import Matricula
 
 from forms import NotaForm
 from models import Nota
-from util.utils import gerar_PDF
+from util.utils import gerar_PDF, normal_round
 
 from itertools import groupby
+from collections import Counter
 import numpy as np
 import json
 from datetime import datetime
@@ -109,7 +110,7 @@ def rendimento_turma(request, turma_id, disciplina_id, bimestre, tipo_nota):
 		if int(tipo_nota) == choices.RECUPERACAO:
 			notas_bimestre = [n for n in notas if n.tipo != long(tipo_nota)] 	
 			
-			if len(notas_bimestre) == 3 and (sum([n.valor for n in notas_bimestre])/3) < media:
+			if len(notas_bimestre) == 3 and sum([n.valor for n in notas_bimestre])/3 < media:
 		   		matriculas_recuperacao.append(matricula)
 
 	matriculas = matriculas_recuperacao if int(tipo_nota) == choices.RECUPERACAO else matriculas 
@@ -130,16 +131,19 @@ def rendimento_turma_recuperacao_final(request, turma_id, disciplina_id):
 	for matricula in matriculas:
 		medias_bimestrais = []
 		notas = matricula.notas.filter(matricula_id=matricula, disciplina_id=disciplina_id)
-		
-		if len(notas) >= 12: # Todas as notas precisam estar cadastradas, cada tipo
+		counter = Counter([n.bimestre for n in notas])
+	
+		if len(counter) == 4 and all(notas_cad >= 3 for notas_cad in counter.values()): 
+			
 			for x, y in choices.BIMESTRE_CHOICES:
+				
 				nota_recuperacao = [n.valor for n in notas if n.bimestre == x and n.tipo == choices.RECUPERACAO]
 				
 				if nota_recuperacao:
 					medias_bimestrais.append(nota_recuperacao[0])	
 				else:
 					notas_bimestre = [n.valor for n in notas if n.bimestre == x and n.tipo != choices.RECUPERACAO]
-					media_bimestral = sum(notas_bimestre)/3	
+					media_bimestral = sum(notas_bimestre)/3
 					medias_bimestrais.append(media_bimestral)
 
 			if sum(medias_bimestrais)/4 < media:
@@ -184,7 +188,7 @@ def gerar_boletim_fundamental(dis, notas_matricula, media):
 
 		# as tres notas sao obigatorias
 		if len(notas_bimestre) >= 3:
-			media_bimestral = sum([nota.valor for nota in notas_bimestre if nota.tipo != long(choices.RECUPERACAO)])/3	
+			media_bimestral = sum([nota.valor for nota in notas_bimestre if nota.tipo != long(choices.RECUPERACAO)])/3
 			
 		dis.notas[key - 1][0] = media_bimestral
 		dis.notas[key - 1][1] = nota_recuperacao[0].valor if nota_recuperacao else None
@@ -192,9 +196,10 @@ def gerar_boletim_fundamental(dis, notas_matricula, media):
 		medias_bimestrais.append(nota_recuperacao[0].valor if nota_recuperacao else media_bimestral)
 
 	if len(medias_bimestrais) == 4:
-		dis.media_final = sum(medias_bimestrais)/4
+		dis.media_final = normal_round(sum(medias_bimestrais)/4)
 		dis.recuperacao_final = nota_recuperacao_final[0].valor if nota_recuperacao_final else None
 		dis.situacao = 'APR' if dis.media_final >= media or dis.recuperacao_final >= media else 'REP' 
+
 
 
 

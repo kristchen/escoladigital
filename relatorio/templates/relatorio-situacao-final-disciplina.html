@@ -1,0 +1,72 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+{% block message %}  
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+ {% block options %}
+  {% include "include-relatorio.html" %}
+ {% endblock options %}
+
+
+{% block body %}
+	
+<form action="{% url 'emitir-relatorio-situacao-final-disciplina' %}" method="POST" role="form"  target="_blank">
+  {% csrf_token %}
+  <div class="panel panel-default">
+     
+     <div class="panel-heading">
+        Relatório - Alunos Situação Final
+     </div>
+      
+     <div class="panel-body" >
+          <div class="row">
+            
+            
+            <div class="form-group col-md-5">
+              <label for="disciplina">Disciplina</label>
+              <select id="disciplina" name="disciplina" class="form-control" >
+                <option>Selecione</option>
+                {% for x in form.fields.disciplina.queryset %} 
+                    <option value="{{x.id}}">{{x.descricao}}</option>
+                {% endfor %}
+              </select>   
+            </div>
+
+            <!--
+              <div class="form-group col-md-3">
+                <label for="situacao">Situação</label>
+                <select id="situacao" name="situacao" class="form-control" >
+                  <option value="A">Aprovados</option>
+                  <option value="R">Reprovados</option>
+                </select>   
+              </div>
+            -->
+
+            </div>
+      </div>
+      
+      <div class="row" style="margin-top:10px; margin-bottom:20px;">
+        <div class="col-md-12 text-center">
+         <button   type="reset" class="btn btn-primary">Limpar</button>
+            <button type="submit" class="btn btn-primary">Emitir</button>
+        </div>
+      </div>
+  </div>   
+</form>
+
+{% endblock body %}

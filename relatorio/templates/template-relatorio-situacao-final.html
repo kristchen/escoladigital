@@ -1,0 +1,82 @@
+{% load staticfiles %}
+<html>
+<head>
+<meta "charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="{% static "/css/relatorio.css" %}">
+</head>
+  <body> 
+  	
+  	<table class="titulo">
+  		<tr>
+  			<td rowspan="5">
+  				  	<div class="divImage">
+             			<img src="{% static "/images/emblema.png" %}">    
+   					 </div>
+  			</td>
+  			<td colspan="2">
+  				 <h3 class="h3-titulo">COLÉGIO BATISTA MONTE SINAI</h3> 	
+  			</td>
+  		</tr>
+
+  		<tr>
+  			<td colspan="2" style="padding-left: 36px;" class="info"><label>ENTIDADE MANTENEDORA: </label> PAI – PROJETO DE APOIO À INFÂNCIA</td>
+  		</tr>
+  		<tr>
+  			<td colspan="2" style="padding-left: 50px;" class="info"><label>ENDEREÇO: </label> AVENIDA J - Nº 194 - CEP  61.605-600 - JUREMA - CAUCAIA</td>
+  		</tr>
+  		<tr>
+  			<td class="info" style="padding-left: 49px;"><label>CNPJ: </label>10653064/0001-45	|	<label>TELEFONE: </label>(85) 34891176</td>
+  		</tr>
+  		<tr>
+  		</tr>
+  	</table>
+
+    {% for turma in turmas  %}
+
+        {% if turma.alunos_relatorio %}
+        
+        
+        <table cellpadding="0" cellspacing="0" class="dados">
+            
+            <caption>
+                <h3>
+                    {{turma.serie.descricao}} {{sequencia}} - Ensino Fundamental - {{conf.ano_letivo}} - {{disciplina.descricao}}
+                </h3>
+            </caption>
+            
+            <thead>
+                <th></th>
+                <th>Aluno</th>
+                <th>Nota Final</th>
+                <th>Situação</th>
+
+            </thead>
+            
+            <tbody>
+                {% for mat in turma.alunos_relatorio  %}
+                <tr
+                {% if forloop.counter|divisibleby:'2' %}
+                class="odd"
+                {% endif %}
+                > 
+                <td>{{ forloop.counter }}</td>
+                <td>{{mat.aluno.nome}}</td> 
+                <td>{{mat.nota_final | floatformat:1}}</td>
+                <td>
+                    
+                    {% if mat.situacao == 'A' %}
+                        Aprovado
+                    {% else %}
+                        Reprovado
+                    {% endif %}
+
+                </td>
+            </tr>  
+            {% endfor %}
+            </tbody>
+         </table>
+        {% endif %}
+    {% endfor %}
+
+</body>
+</html>   
