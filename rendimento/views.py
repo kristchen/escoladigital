@@ -189,11 +189,10 @@ def gerar_boletim_fundamental(dis, notas_matricula, media):
 		# as tres notas sao obigatorias
 		if len(notas_bimestre) >= 3:
 			media_bimestral = sum([nota.valor for nota in notas_bimestre if nota.tipo != long(choices.RECUPERACAO)])/3
+			medias_bimestrais.append(nota_recuperacao[0].valor if nota_recuperacao else media_bimestral)
 			
 		dis.notas[key - 1][0] = media_bimestral
 		dis.notas[key - 1][1] = nota_recuperacao[0].valor if nota_recuperacao else None
-
-		medias_bimestrais.append(nota_recuperacao[0].valor if nota_recuperacao else media_bimestral)
 
 	if len(medias_bimestrais) == 4:
 		dis.media_final = normal_round(sum(medias_bimestrais)/4)
