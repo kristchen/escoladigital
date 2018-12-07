@@ -35,4 +35,4 @@ def normal_round(n):
 	if n - decimal.Decimal(math.floor(n)) < 0.6:
 		return n
 	else:
-		return math.ceil(n)
+		return round(n)
