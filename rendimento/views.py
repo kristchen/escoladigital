@@ -137,16 +137,12 @@ def rendimento_turma_recuperacao_final(request, turma_id, disciplina_id):
 			
 			for x, y in choices.BIMESTRE_CHOICES:
 				
+				notas_bimestre = [n.valor for n in notas if n.bimestre == x and n.tipo != choices.RECUPERACAO]
 				nota_recuperacao = [n.valor for n in notas if n.bimestre == x and n.tipo == choices.RECUPERACAO]
-				
-				if nota_recuperacao:
-					medias_bimestrais.append(nota_recuperacao[0])	
-				else:
-					notas_bimestre = [n.valor for n in notas if n.bimestre == x and n.tipo != choices.RECUPERACAO]
-					media_bimestral = sum(notas_bimestre)/3
-					medias_bimestrais.append(media_bimestral)
+				media_bimestral = sum(notas_bimestre)/3
+				medias_bimestrais.append(nota_recuperacao[0] if nota_recuperacao and nota_recuperacao[0] > media_bimestral else media_bimestral)
 
-			if sum(medias_bimestrais)/4 < media:
+			if normal_round(sum(medias_bimestrais)/4) < media:
 				nota_recuperacao_final = [n for n in notas if n.bimestre == choices.RECUPERACAO_FINAL and n.tipo == choices.RECUPERACAO]
 				matricula.nota = nota_recuperacao_final[0] if nota_recuperacao_final else None
 				matriculas_recuperacao_final.append(matricula)
@@ -197,7 +193,13 @@ def gerar_boletim_fundamental(dis, notas_matricula, media):
 	if len(medias_bimestrais) == 4:
 		dis.media_final = normal_round(sum(medias_bimestrais)/4)
 		dis.recuperacao_final = nota_recuperacao_final[0].valor if nota_recuperacao_final else None
-		dis.situacao = 'APR' if dis.media_final >= media or dis.recuperacao_final >= media else 'REP' 
+		
+		if not dis.recuperacao_final:
+			dis.situacao = 'REC'
+		elif dis.media_final >= media or dis.recuperacao_final >= media:
+			dis.situacao = 'APR' 
+		else: 
+			dis.situacao = 'REP' 
 
 
 

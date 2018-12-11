@@ -91,7 +91,8 @@
                       <td>{{dis.recuperacao_final|floatformat:1}}</td>
                       
                       {% if dis.situacao %}
-                        <td>{{dis.situacao}}</td>
+                        
+                          <td>{{dis.situacao}}</td>
                       
                         {% else %}
                       
@@ -112,6 +113,7 @@
                   <br><label>ST:</label>Situação   |
                   <label>APR:</label>Aprovado   |
                   <label>REP:</label>Reprovado   |
+                  <label>REC:</label>Recuperação   |
           </fieldset> 
           <div class="pagebreak"></div>
 {% endfor %}     

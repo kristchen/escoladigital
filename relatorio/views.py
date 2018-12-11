@@ -52,27 +52,26 @@ def emitir_relatorio_situacao_final_disciplina(request):
 					if len(counter) == 4 and all(notas_cad >= 3 for notas_cad in counter.values()): 
 
 						# caso o aluno tenha feito a recuperacao final
-						nota_final = [nf.valor for nf in notas_disciplina if nf.bimestre == RECUPERACAO_FINAL]
+						# nota_final = [nf.valor for nf in notas_disciplina if nf.bimestre == RECUPERACAO_FINAL]
 
-						if not nota_final:
-							medias_bimestrais = []
-							notas_ordenadas_bimestre = sorted(notas_disciplina, key=lambda x:x.bimestre)
-							grupo_notas_bimestre = groupby(notas_ordenadas_bimestre, lambda x: x.bimestre)
+						medias_bimestrais = []
+						notas_ordenadas_bimestre = sorted(notas_disciplina, key=lambda x:x.bimestre)
+						grupo_notas_bimestre = groupby(notas_ordenadas_bimestre, lambda x: x.bimestre)
 
-							for key, grupo in grupo_notas_bimestre:
-								notas_bimestre   = [n for n in grupo]
-								
-								nota_recuperacao = next((n for n in notas_bimestre if n.tipo == long(RECUPERACAO)), None)
-								
-								media_bimestral = sum([nota.valor for nota in notas_bimestre if nota.tipo != long(RECUPERACAO)])/3
-
-								medias_bimestrais.append(media_bimestral if nota_recuperacao == None else nota_recuperacao.valor)
+						for key, grupo in grupo_notas_bimestre:
+							notas_bimestre   = [n for n in grupo]
 							
-							nota_final = normal_round(sum(medias_bimestrais)/4)
+							nota_recuperacao = next((n for n in notas_bimestre if n.tipo == long(RECUPERACAO)), None)
+							
+							media_bimestral = sum([nota.valor for nota in notas_bimestre if nota.tipo != long(RECUPERACAO)])/3
+
+							medias_bimestrais.append(media_bimestral if nota_recuperacao == None else nota_recuperacao.valor)
 						
-						matricula.situacao = 'A' if nota_final >= confs.media else 'R'
-						matricula.nota_final = nota_final
-						alunos_relatorio.append(matricula)
+						nota_final = normal_round(sum(medias_bimestrais)/4)
+						
+						if nota_final < confs.media:
+							matricula.nota_final = nota_final
+							alunos_relatorio.append(matricula)
 				
 				turma.alunos_relatorio = alunos_relatorio
 				turmas_relatorio.append(turma)

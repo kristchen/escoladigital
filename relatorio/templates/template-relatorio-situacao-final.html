@@ -54,25 +54,17 @@
             
             <tbody>
                 {% for mat in turma.alunos_relatorio  %}
-                <tr
-                {% if forloop.counter|divisibleby:'2' %}
-                class="odd"
-                {% endif %}
-                > 
-                <td>{{ forloop.counter }}</td>
-                <td>{{mat.aluno.nome}}</td> 
-                <td>{{mat.nota_final | floatformat:1}}</td>
-                <td>
-                    
-                    {% if mat.situacao == 'A' %}
-                        Aprovado
-                    {% else %}
-                        Reprovado
-                    {% endif %}
-
-                </td>
-            </tr>  
-            {% endfor %}
+                        <tr
+                        {% if forloop.counter|divisibleby:'2' %}
+                        class="odd"
+                        {% endif %}
+                        > 
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{mat.aluno.nome}}</td> 
+                        <td>{{mat.nota_final | floatformat:1}}</td>
+                        <td>Recuperação</td>
+                        </tr>  
+                {% endfor %}
             </tbody>
          </table>
         {% endif %}
