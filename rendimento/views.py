@@ -194,11 +194,11 @@ def gerar_boletim_fundamental(dis, notas_matricula, media):
 		dis.media_final = normal_round(sum(medias_bimestrais)/4)
 		dis.recuperacao_final = nota_recuperacao_final[0].valor if nota_recuperacao_final else None
 		
-		if not dis.recuperacao_final:
-			dis.situacao = 'REC'
-		elif dis.media_final >= media or dis.recuperacao_final >= media:
-			dis.situacao = 'APR' 
-		else: 
+		if dis.media_final >= media or dis.recuperacao_final and dis.recuperacao_final >= media: 
+			dis.situacao = 'APR'
+		elif dis.media_final < media and not dis.recuperacao_final:
+			dis.situacao = 'REC' 
+		elif dis.recuperacao_final and dis.recuperacao_final < media: 
 			dis.situacao = 'REP' 
 
 
