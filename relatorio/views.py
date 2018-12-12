@@ -65,9 +65,8 @@ def emitir_relatorio_situacao_final_disciplina(request):
 							
 							media_bimestral = sum([nota.valor for nota in notas_bimestre if nota.tipo != long(RECUPERACAO)])/3
 
-							medias_bimestrais.append(media_bimestral if nota_recuperacao == None else nota_recuperacao.valor)
-						
-						nota_final = normal_round(sum(medias_bimestrais)/4)
+							medias_bimestrais.append(nota_recuperacao.valor if nota_recuperacao and nota_recuperacao.valor > media_bimestral else media_bimestral)	
+							nota_final = normal_round(sum(medias_bimestrais)/4)
 						
 						if nota_final < confs.media:
 							matricula.nota_final = nota_final
