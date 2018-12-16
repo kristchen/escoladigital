@@ -29,8 +29,11 @@
   		</tr>
   		<tr>
   		</tr>
-  	</table>
-
+      </table>
+    
+    <h3>  
+        {{disciplina.descricao}}
+    </h3>
     {% for turma in turmas  %}
 
         {% if turma.alunos_relatorio %}
@@ -38,17 +41,15 @@
         
         <table cellpadding="0" cellspacing="0" class="dados">
             
-            <caption>
-                <h3>
-                    {{turma.serie.descricao}} {{sequencia}} - Ensino Fundamental - {{conf.ano_letivo}} - {{disciplina.descricao}}
-                </h3>
-            </caption>
+            <h5>
+                    {{turma.serie.descricao}} {{turma.sequencia}} - Ensino Fundamental - {{conf.ano_letivo}} 
+            </h5>
             
             <thead>
-                <th></th>
-                <th>Aluno</th>
-                <th>Nota Final</th>
-                <th>Situação</th>
+                <th style="width:15px" ></th>
+                <th >Aluno</th>
+                <th style="width:100px" >Nota Final</th>
+                <th style="width:100px" >Situação</th>
 
             </thead>
             

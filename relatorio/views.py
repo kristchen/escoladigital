@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from forms import TurmaRelatorioForm, SituacaoFinalDisciplinaRelatorioForm
+from forms import TurmaRelatorioForm, SituacaoFinalDisciplinaRelatorioForm, AtasFinaisForm
 from escola.models import Serie, Configuracoes, Turma, Curriculo
 from util.utils import gerar_PDF, normal_round
 from itertools import chain
@@ -11,6 +11,12 @@ from rendimento.choices import RECUPERACAO_FINAL, RECUPERACAO
 from escola.choices import MODALIDADE_FUNDAMENTAL
 from itertools import groupby
 from collections import Counter
+
+@login_required
+def relatorio_atas_finais(request):
+	form = AtasFinaisForm()
+	return render(request, 'relatorio-atas-finais.html', {'form':form})
+
 
 @login_required
 def relatorio_situacao_final_disciplina(request):
@@ -77,7 +83,7 @@ def emitir_relatorio_situacao_final_disciplina(request):
 
 		context = {'turmas':turmas_relatorio, 'disciplina': disciplina, 'conf':confs}
 
-		return gerar_PDF(request, context, 'template-relatorio-situacao-final', 'relatorio')
+		return gerar_PDF(request, context, 'template-relatorio-situacao-final-disciplina', 'relatorio')
 
 	return render(request, 'relatorio-turma.html', {'form':form})
 

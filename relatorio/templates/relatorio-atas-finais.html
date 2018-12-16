@@ -1,0 +1,59 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+{% block message %}  
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+ {% block options %}
+  {% include "include-relatorio.html" %}
+ {% endblock options %}
+
+
+{% block body %}
+	
+<form action="" method="POST" role="form"  target="_blank">
+  {% csrf_token %}
+  <div class="panel panel-default">
+     
+     <div class="panel-heading">
+        Relatório - Resultado de Atas Finais
+     </div>
+      
+     <div class="panel-body" >
+          <div class="row">
+            <div class="form-group col-md-5">
+              <label for="turma">Turma</label>
+              <select id="turma" name="turma" class="form-control" >
+                <option>Selecione</option>
+                {% for x in form.fields.turma.queryset %} 
+                    <option value="{{x.id}}"> {{x.serie.descricao}} - {{x.sequencia}}</option>
+                {% endfor %}
+              </select>   
+            </div>
+            </div>
+      </div>
+      
+      <div class="row" style="margin-top:10px; margin-bottom:20px;">
+        <div class="col-md-12 text-center">
+         <button   type="reset" class="btn btn-primary">Limpar</button>
+            <button type="submit" class="btn btn-primary">Emitir</button>
+        </div>
+      </div>
+  </div>   
+</form>
+
+{% endblock body %}
