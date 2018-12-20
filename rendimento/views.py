@@ -133,7 +133,7 @@ def rendimento_turma_recuperacao_final(request, turma_id, disciplina_id):
 		notas = matricula.notas.filter(matricula_id=matricula, disciplina_id=disciplina_id)
 		counter = Counter([n.bimestre for n in notas])
 	
-		if len(counter) == 4 and all(notas_cad >= 3 for notas_cad in counter.values()): 
+		if len(counter) == 5 or len(counter) == 4 and all(notas_cad >= 3 for notas_cad in counter.values()): 
 			
 			for x, y in choices.BIMESTRE_CHOICES:
 				
@@ -141,6 +141,9 @@ def rendimento_turma_recuperacao_final(request, turma_id, disciplina_id):
 				nota_recuperacao = [n.valor for n in notas if n.bimestre == x and n.tipo == choices.RECUPERACAO]
 				media_bimestral = sum(notas_bimestre)/3
 				medias_bimestrais.append(nota_recuperacao[0] if nota_recuperacao and nota_recuperacao[0] > media_bimestral else media_bimestral)
+
+			print matricula.aluno.nome
+			print medias_bimestrais
 
 			if normal_round(sum(medias_bimestrais)/4) < media:
 				nota_recuperacao_final = [n for n in notas if n.bimestre == choices.RECUPERACAO_FINAL and n.tipo == choices.RECUPERACAO]

@@ -1,0 +1,75 @@
+{% load staticfiles %}
+<html>
+<head>
+<meta "charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="{% static "/css/relatorio_paisagem.css" %}">
+</head>
+  <body> 
+  	
+  	<table class="titulo">
+  		<tr>
+  			<td rowspan="4">
+  				  	<div class="divImage">
+             			<img src="{% static "/images/emblema.png" %}">    
+   					 </div>
+  			</td>
+  			<td colspan="8">
+  				 <h3 style="text-align:left" class="h3-titulo">COLÉGIO BATISTA MONTE SINAI</h3> 	
+  			</td>
+          </tr>
+          
+            <tr>
+                <td style="text-align: left" class="info"><label>ENTIDADE MANTENEDORA: </label> PAI – PROJETO DE APOIO À INFÂNCIA</td>
+            </tr>
+            <tr>
+                <td style="text-align: left" class="info"><label>ENDEREÇO: </label> AVENIDA J - Nº 194 - CEP  61.605-600 - JUREMA - CAUCAIA</td>
+            </tr>
+            <tr>
+                <td style="text-align: left" class="info" ><label>CNPJ: </label>10653064/0001-45	|	<label>TELEFONE: </label>(85) 34891176</td>
+            </tr>
+
+    </table>
+    
+    <table cellpadding="0" cellspacing="0" class="dados">
+            
+            <h5>
+                  ATA DE RESULTADOS FINAIS - {{turma.serie.descricao}} {{turma.sequencia}} - Ensino Fundamental - {{confs.ano_letivo}} 
+            </h5>
+            
+            <thead>
+                <th style="width:15px" ></th>
+                <th >Aluno</th>
+                {% for dis in disciplinas %}
+                    <th>
+                        {{ dis.descricao | upper | slice:":3"}}
+                    </th>
+                {% endfor %}
+
+                <th>OBS</th>
+
+            </thead>
+            
+            <tbody>
+                {% for mat in matriculas  %}
+                    <tr
+                        {% if forloop.counter|divisibleby:'2' %}
+                        class="odd"
+                        {% endif %}
+                        > 
+                        <td>{{ forloop.counter }}</td>
+                        
+                        <td>{{mat.aluno.nome}}</td> 
+                        
+                        {% for nota in mat.notas_finais %}
+
+                            <td>{{nota | floatformat:1}}</td>
+                        
+                        {% endfor %}
+                        <td>{{ mat.obs }}</td>
+                    </tr>  
+                {% endfor %}
+            </tbody>
+    </table>
+
+</body>
+</html>   

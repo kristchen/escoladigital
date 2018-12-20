@@ -25,7 +25,7 @@
 
 {% block body %}
 	
-<form action="" method="POST" role="form"  target="_blank">
+<form action="{% url 'emitir-relatorio-atas-finais' %}" method="POST" role="form"  target="_blank">
   {% csrf_token %}
   <div class="panel panel-default">
      

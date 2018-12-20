@@ -28,6 +28,58 @@ def relatorio_turma(request):
 	form = TurmaRelatorioForm()
 	return render(request, 'relatorio-turma.html', {'form':form})
 
+def emitir_relatorio_atas_finais(request):
+	form = AtasFinaisForm(request.POST)
+
+	if form.is_valid():
+		dados = form.cleaned_data
+		confs = Configuracoes.objects.get(id=1)
+		turma = Turma.objects.get(pk=dados['turma'].id)
+		disciplinas = [ x.disciplina for x in turma.serie.curriculos.all() if x.ativo and not x.disciplina.somente_historico]
+		matriculas = turma.alunos.filter(ano=confs.ano_letivo)
+
+		for matricula in matriculas:
+			
+			notas_finais = []
+			notas_matricula = matricula.notas.all()
+			counter = Counter([n.bimestre for n in notas_matricula if n.bimestre != RECUPERACAO_FINAL])
+			
+			# se cadastrou todas as notas do bimestre ou o aluno foi transferido
+			if len(counter) == 5 or len(counter) == 4 and all(notas_cad >= 3 for notas_cad in counter.values()):
+				for dis in disciplinas:
+					medias_bimestrais = []
+					notas_disciplina = [x for x in notas_matricula if x.disciplina_id == dis.id and x.bimestre != RECUPERACAO_FINAL]
+					nota_recuperacao_final = [x for x in notas_matricula if x.disciplina_id == dis.id and x.bimestre == RECUPERACAO_FINAL]
+					
+					notas_ordenadas_bimestre = sorted(notas_disciplina, key=lambda x:x.bimestre)
+					grupo_notas_bimestre = groupby(notas_ordenadas_bimestre, lambda x: x.bimestre)
+
+					for key, grupo in grupo_notas_bimestre:
+						media_bimestral  = None
+						notas_bimestre   = [n for n in grupo]
+						nota_recuperacao = [n for n in notas_bimestre if n.tipo == long(RECUPERACAO)]
+
+						if len(notas_bimestre) >= 3:
+							media_bimestral = sum([nota.valor for nota in notas_bimestre if nota.tipo != long(RECUPERACAO)])/3
+							medias_bimestrais.append(nota_recuperacao[0].valor if nota_recuperacao and nota_recuperacao[0].valor > media_bimestral else media_bimestral)
+					
+					if len(medias_bimestrais) == 4:
+						media_final = normal_round(sum(medias_bimestrais)/4)
+						recuperacao_final = nota_recuperacao_final[0].valor if nota_recuperacao_final else None
+						notas_finais.append(recuperacao_final if recuperacao_final and recuperacao_final > media_final else media_final)
+					else:
+						notas_finais.append(None)
+			
+			matricula.notas_finais = notas_finais
+			matricula.obs = 'APR' if not any(nota for nota in notas_finais if nota < 6) else 'REP'
+
+		context = {'disciplinas':disciplinas, 'matriculas':matriculas, 'confs':confs, 'turma':turma}
+		
+		return gerar_PDF(request, context, 'template-relatorio-atas-finais', 'relatorio')
+
+	return render(request, 'relatorio-atas-finais.html', {'form':form})
+
+
 def emitir_relatorio_situacao_final_disciplina(request):
 	form = SituacaoFinalDisciplinaRelatorioForm(request.POST)
 	
@@ -49,8 +101,8 @@ def emitir_relatorio_situacao_final_disciplina(request):
 			if turma.serie.modalidade == MODALIDADE_FUNDAMENTAL:
 
 				alunos_relatorio = []
-
-				for matricula in turma.alunos.all():
+				
+				for matricula in turma.alunos.filter(ano=confs.ano_letivo):
 					
 					notas_disciplina = matricula.notas.filter(disciplina_id=disciplina.id)
 					counter = Counter([n.bimestre for n in notas_disciplina if n.bimestre != RECUPERACAO_FINAL])
