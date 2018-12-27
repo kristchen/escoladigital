@@ -40,6 +40,7 @@ class Matricula(models.Model):
 	data_matricula = models.DateField(auto_now=False, default=datetime.date.today())
 	ano = models.PositiveIntegerField(null=False)
 	numero = models.CharField(unique=True, max_length=255, default='0')
+	transferido = models.BooleanField(default=False)
 	history = HistoricalRecords()
 		
 	class Meta(object):

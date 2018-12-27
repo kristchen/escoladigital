@@ -89,10 +89,12 @@ def matricular_aluno(request, aluno_id):
 		dados = form.cleaned_data
 		turma = dados['turma']
 		ano   = dados['ano']
+		transferido = dados['transferido']
 		# verificar caso o aluno já tenha notas lancadas nessa serie ?
-		if matriculas:
-			matricula = matriculas[0]
+		if matricula_atual:
+			matricula = matricula_atual
 			matricula.turma = turma
+			matricula.transferido = transferido
 		else:
 			matricula = Matricula(aluno=aluno, turma=turma, ano=ano)
 		

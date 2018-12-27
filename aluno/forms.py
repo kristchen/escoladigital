@@ -50,12 +50,13 @@ class DeclaracaoAlunoForm(forms.Form):
 
 class MatriculaForm(forms.ModelForm):
 	
-	turma = forms.ModelChoiceField(queryset=Turma.objects.filter(ativa=True),   required=True,   error_messages={'required':'Informe a turma.'})
+	turma = forms.ModelChoiceField(queryset=Turma.objects.filter(ativa=True), required=True,   error_messages={'required':'Informe a turma.'})
 	ano   = forms.IntegerField(required=True, error_messages={'required':'Informe o ano de matrícula.'})
+	transferido = forms.BooleanField()
 
 	class Meta(object):
 		model = Matricula
-		fields = ('turma','ano')	
+		fields = ('turma','ano', 'transferido')	
 
 
 

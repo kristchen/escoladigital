@@ -37,15 +37,17 @@
             </h5>
             
             <thead>
-                <th style="width:15px" ></th>
-                <th >Aluno</th>
-                {% for dis in disciplinas %}
+                <tr style="font-size: 13px">
+                    <th style="width:15px" ></th>
+                    <th >Aluno</th>
+                    {% for dis in disciplinas %}
                     <th>
                         {{ dis.descricao | upper | slice:":3"}}
                     </th>
-                {% endfor %}
-
-                <th>OBS</th>
+                    {% endfor %}
+                    
+                    <th>OBSERVAÇÃO</th>
+                </tr>
 
             </thead>
             
@@ -55,17 +57,29 @@
                         {% if forloop.counter|divisibleby:'2' %}
                         class="odd"
                         {% endif %}
-                        > 
+                        style="font-size: 13px">
+
                         <td>{{ forloop.counter }}</td>
                         
                         <td>{{mat.aluno.nome}}</td> 
                         
-                        {% for nota in mat.notas_finais %}
+                        {% if mat.transferido %}
 
-                            <td>{{nota | floatformat:1}}</td>
+                            <td colspan="{{ disciplinas | length }}"></td>
+                            <td>Transferido</td>
+
+                        {% else %}
                         
-                        {% endfor %}
-                        <td>{{ mat.obs }}</td>
+                            {% for nota in mat.notas_finais %}
+
+                                <td>{{nota | floatformat:1}}</td>
+                            
+                            {% endfor %}
+
+                            <td>{{ mat.obs }}</td>
+
+                        {% endif %}
+
                     </tr>  
                 {% endfor %}
             </tbody>

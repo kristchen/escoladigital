@@ -42,7 +42,7 @@ def emitir_relatorio_atas_finais(request):
 			
 			notas_finais = []
 			notas_matricula = matricula.notas.all()
-			counter = Counter([n.bimestre for n in notas_matricula if n.bimestre != RECUPERACAO_FINAL])
+			counter = Counter([n.bimestre for n in notas_matricula])
 			
 			# se cadastrou todas as notas do bimestre ou o aluno foi transferido
 			if len(counter) == 5 or len(counter) == 4 and all(notas_cad >= 3 for notas_cad in counter.values()):
@@ -70,8 +70,8 @@ def emitir_relatorio_atas_finais(request):
 					else:
 						notas_finais.append(None)
 			
-			matricula.notas_finais = notas_finais
-			matricula.obs = 'APR' if not any(nota for nota in notas_finais if nota < 6) else 'REP'
+				matricula.notas_finais = notas_finais
+				matricula.obs = 'Aprovado' if not any(nota for nota in notas_finais if nota < 6) else 'Reprovado'
 
 		context = {'disciplinas':disciplinas, 'matriculas':matriculas, 'confs':confs, 'turma':turma}
 		
