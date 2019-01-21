@@ -142,9 +142,6 @@ def rendimento_turma_recuperacao_final(request, turma_id, disciplina_id):
 				media_bimestral = sum(notas_bimestre)/3
 				medias_bimestrais.append(nota_recuperacao[0] if nota_recuperacao and nota_recuperacao[0] > media_bimestral else media_bimestral)
 
-			print matricula.aluno.nome
-			print medias_bimestrais
-
 			if normal_round(sum(medias_bimestrais)/4) < media:
 				nota_recuperacao_final = [n for n in notas if n.bimestre == choices.RECUPERACAO_FINAL and n.tipo == choices.RECUPERACAO]
 				matricula.nota = nota_recuperacao_final[0] if nota_recuperacao_final else None
