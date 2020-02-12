@@ -3,7 +3,7 @@
 
 {% block message %}  
 
-    <div class="alert alert-danger" name="alert-historico" style="display:none">
+    <div class="alert alert-danger" id="alert-historico" style="display:none">
         Todos os campos do histórico devem ser preenchidos.
     </div>
 
@@ -199,7 +199,7 @@
 
   function validarCampos(){
     var pass = true
-    $("input, select").not('input.number').each(function(){
+    $("input, select").not('input.number, :hidden').each(function(){
           if($(this).val() == "")
              pass = false
     });
