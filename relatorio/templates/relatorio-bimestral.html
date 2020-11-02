@@ -1,0 +1,77 @@
+{% extends 'escoladigital/templates/base.html' %}
+
+{% block message %}  
+
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      
+      {% for field in form %} 
+        {% if field.errors %}
+        <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  {% endif %}
+
+{% endblock message%}
+
+
+ {% block options %}
+  {% include "include-relatorio.html" %}
+ {% endblock options %}
+
+
+{% block body %}
+	
+<form action="{% url 'emitir-relatorio-bimestral' %}" method="POST" role="form"  target="_blank">
+  {% csrf_token %}
+  <div class="panel panel-default">
+     
+     <div class="panel-heading">
+        Relatório - Resultados Bimestrais
+     </div>
+      
+     <div class="panel-body" >
+      <div id="filtros" class="row">
+        <div class="form-group col-md-3">
+          <label for="turma">Turma</label>
+          <select id="turma" name="turma" class="busca form-control" >
+              <option value="">Selecione</option>
+              {% for x in form.fields.turma.queryset  %} 
+                <option id-serie="{{x.serie.id}}" modalidade="{{x.serie.modalidade}}" value="{{x.id}}">{{x.serie.descricao}} - {{x.sequencia}}
+                </option>
+              {% endfor %}
+          </select>   
+        </div>
+
+        <div id="divDisciplinas" class="form-group col-md-3">
+
+        </div>
+
+        <!-- <div class="form-group col-md-3" style="display:none">
+          <label for="bimestre">Bimestre</label>
+          <select id="bimestre" name="bimestre" class="busca form-control" >
+              <option value="">Selecione</option>
+              {% for x,y in form.fields.bimestre.choices %} 
+                <option value="{{x}}">{{y}}</option>
+              {% endfor %}
+          </select>   
+        </div> -->
+
+      </div>
+  </div>
+      
+      <div class="row" style="margin-top:10px; margin-bottom:20px;">
+        <div class="col-md-12 text-center">
+         <button   type="reset" class="btn btn-primary">Limpar</button>
+            <button type="submit" class="btn btn-primary">Emitir</button>
+        </div>
+      </div>
+  </div>   
+</form>
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "js/cadastro_notas.js" %}"></script>
+
+{% endblock body %}

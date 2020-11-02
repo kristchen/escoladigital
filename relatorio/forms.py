@@ -14,3 +14,8 @@ class SituacaoFinalDisciplinaRelatorioForm(forms.Form):
 
 class AtasFinaisForm(forms.Form):
 	turma = forms.ModelChoiceField(queryset=Turma.objects.all(), required=True, error_messages={'required':'A série deve ser informada'})
+
+class ResultadoBimestralForm(forms.Form):
+	turma = forms.ModelChoiceField(queryset=Turma.objects.all(), required=True, error_messages={'required':'A série deve ser informada'})
+	disciplinas = forms.ModelChoiceField(queryset=Disciplina.objects.all(), required=True, error_messages={'required':'Informe a disciplina'})
+	# bimestre = forms.ChoiceField(choices=choices.BIMESTRE_CHOICES, required=True, error_messages={'required':'Informe o bimestre de referência.'})

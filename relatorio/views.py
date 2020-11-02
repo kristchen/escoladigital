@@ -2,15 +2,17 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from forms import TurmaRelatorioForm, SituacaoFinalDisciplinaRelatorioForm, AtasFinaisForm
+from forms import TurmaRelatorioForm, SituacaoFinalDisciplinaRelatorioForm, AtasFinaisForm, ResultadoBimestralForm
 from escola.models import Serie, Configuracoes, Turma, Curriculo
 from util.utils import gerar_PDF, normal_round
 from itertools import chain
 from django.contrib.auth.decorators import login_required
-from rendimento.choices import RECUPERACAO_FINAL, RECUPERACAO
+from rendimento.choices import RECUPERACAO_FINAL, RECUPERACAO, NOTA_BIMESTRAL, NOTA_PARCIAL, NOTA_EXTRA
 from escola.choices import MODALIDADE_FUNDAMENTAL
 from itertools import groupby
 from collections import Counter
+import numpy as np
+
 
 @login_required
 def relatorio_atas_finais(request):
@@ -27,6 +29,41 @@ def relatorio_situacao_final_disciplina(request):
 def relatorio_turma(request):
 	form = TurmaRelatorioForm()
 	return render(request, 'relatorio-turma.html', {'form':form})
+
+@login_required
+def relatorio_bimestral(request):
+	form = ResultadoBimestralForm()
+	return render(request, 'relatorio-bimestral.html', {'form':form})
+
+def emitir_relatorio_bimestral(request):
+	form = ResultadoBimestralForm(request.POST)
+	if form.is_valid():
+		dados = form.cleaned_data
+		confs = Configuracoes.objects.get(id=1)
+		turma = dados['turma']
+		disciplina = dados['disciplinas']
+		matriculas = turma.alunos.filter(ano=confs.ano_letivo)
+
+
+		for matricula in matriculas:
+			matricula.bimestres = np.full([4], {})
+			notas = matricula.notas.filter(disciplina=disciplina.id).order_by('bimestre')
+			grupo_notas_bimestre = groupby(notas, lambda x: x.bimestre)
+	
+			for key, grupo in grupo_notas_bimestre:
+				bimestre = dict.fromkeys([str('nota_parcial'), str('nota_bimestral'),str('nota_extra')])
+				bimestre['nota_parcial']  = next((n for n in grupo if n.tipo == long(NOTA_PARCIAL)), None)
+				bimestre['nota_bimestral']  = next((n for n in grupo if n.tipo == long(NOTA_BIMESTRAL)), None)
+				bimestre['nota_extra'] = next((n for n in grupo if n.tipo == long(NOTA_EXTRA)), None)
+				print bimestre
+				matricula.bimestres[key - 1] = bimestre
+			print(matricula.bimestres)
+
+		context = {'matriculas':matriculas, 'confs':confs, 'turma':turma, 'disciplina':disciplina}
+		return gerar_PDF(request, context, 'template-relatorio-bimestral', 'relatorio')
+
+
+	return render(request, 'relatorio-bimestral.html', {'form':form})
 
 def emitir_relatorio_atas_finais(request):
 	form = AtasFinaisForm(request.POST)

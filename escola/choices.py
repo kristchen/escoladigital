@@ -36,3 +36,10 @@ SERIES_CHOICES = (
 )
 
 ANO_LETIVO_CHOICES = tuple((n, str(n)) for n in range(1995, datetime.now().year + 1))
+
+BIMESTRE_CHOICES = (
+	(1, '1° Bimestre'),
+	(2, '2° Bimestre'),
+	(3, '3° Bimestre'),
+	(4, '4° Bimestre')	
+)

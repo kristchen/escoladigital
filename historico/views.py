@@ -77,8 +77,8 @@ def editar_historico(request):
 
 	jsonInstituicao = data.get('instituicao')
 	if jsonInstituicao.get('id'):
-		instituicao = Instituicao.objects.get(id=jsonInstituicao['id_instituicao'])
-		instituicao.descricao = jsonInstituicao['instituicao'] 
+		instituicao = Instituicao.objects.get(id=jsonInstituicao['id'])
+		instituicao.descricao = jsonInstituicao['descricao'] 
 		instituicao.uf = jsonInstituicao['uf'] 
 		instituicao.cidade = jsonInstituicao['cidade']
 		instituicao.save()

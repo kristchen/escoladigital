@@ -34,7 +34,7 @@
   <div class="panel panel-default">
            
            <div class="panel-heading">
-              Cadastro De Histórico
+              Cadastro De Histórico - {{aluno.nome}}
             </div>
            <div class="panel-body" >
             
@@ -284,7 +284,7 @@
 
     var json = {
       "instituicao":{ 'descricao':$("#desc_instituicao").val(),
-                      'id':$("#id_instituicao").val(),
+                      'id':$("input[name=id_instituicao]").val(),
                       'cidade':$("#cidade").val(),
                       'uf':$("#uf").val()},
       "id_historico":$("input[name=id_historico").val(),
