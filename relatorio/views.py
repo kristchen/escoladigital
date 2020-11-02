@@ -51,13 +51,12 @@ def emitir_relatorio_bimestral(request):
 			grupo_notas_bimestre = groupby(notas, lambda x: x.bimestre)
 	
 			for key, grupo in grupo_notas_bimestre:
+				notas_bimestre   = [n for n in grupo]
 				bimestre = dict.fromkeys([str('nota_parcial'), str('nota_bimestral'),str('nota_extra')])
-				bimestre['nota_parcial']  = next((n for n in grupo if n.tipo == long(NOTA_PARCIAL)), None)
-				bimestre['nota_bimestral']  = next((n for n in grupo if n.tipo == long(NOTA_BIMESTRAL)), None)
-				bimestre['nota_extra'] = next((n for n in grupo if n.tipo == long(NOTA_EXTRA)), None)
-				print bimestre
+				bimestre['nota_parcial']  = next((n for n in notas_bimestre if n.tipo == long(NOTA_PARCIAL)), None)
+				bimestre['nota_bimestral']  = next((n for n in notas_bimestre if n.tipo == long(NOTA_BIMESTRAL)), None)
+				bimestre['nota_extra'] = next((n for n in notas_bimestre if n.tipo == long(NOTA_EXTRA)), None)
 				matricula.bimestres[key - 1] = bimestre
-			print(matricula.bimestres)
 
 		context = {'matriculas':matriculas, 'confs':confs, 'turma':turma, 'disciplina':disciplina}
 		return gerar_PDF(request, context, 'template-relatorio-bimestral', 'relatorio')
