@@ -32,6 +32,10 @@ class Aluno(models.Model):
 	sexo = models.CharField(null=False, max_length=1)
 	history = HistoricalRecords()
 
+	def save(self, *args, **kwargs):
+		self.nome = self.nome.upper()
+		super(Aluno, self).save(*args, **kwargs)
+
 
 class Matricula(models.Model):
 	

@@ -3,6 +3,12 @@
 
 {% block message %}  
 
+{% if form.delete %}
+  <div class="alert alert-warning" name="alert-historico">
+    Historico excluido com sucesso.
+  </div>
+{% endif %}
+
     <div class="alert alert-danger" name="alert-historico" style="display:none">
         Todos os campos do histórico devem ser preenchidos.
     </div>
@@ -10,6 +16,16 @@
     <div class="alert alert-success" id="alert-success" style="display:none">
       <button type="button" class="close">×</button>
         Histórico cadastrado com sucesso.       
+    </div>
+
+    <div class="alert alert-success" id="alert-success-cons" style="display:none">
+      <button type="button" class="close">×</button>
+        Histórico consolidado com sucesso.       
+    </div>
+
+    <div class="alert alert-success" id="alert-success-err" style="display:none">
+      <button type="button" class="close">×</button>
+        Não foi possivel consolidar o histórico.    
     </div>
 
 {% endblock message%}
@@ -27,6 +43,7 @@
   <div class="panel panel-default">
            
            <div class="panel-heading">
+            <input type="hidden" id="aluno_id" value="{{aluno.id}}">
               Detalhe Histórico - {{aluno.nome}}
             </div>
            <div class="panel-body" >
@@ -35,27 +52,30 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>Instituicão</th>
+                    <th class="col-lg-5">Instituicão</th>
                     <th class="col-lg-1">Ano</th>
-                    <th class="col-md-2">Série</th>
+                    <th class="col-lg-2">Série</th>
                     <th class="col-lg-1">Situação</th>
                     <th class="col-lg-1"></th>
+                    <th class="col-lg-1"></th>
+
                   </tr>
                 </thead>
     
                 <tbody>
                   {% for hs in historicos %} 
                     <tr>
-                        <td >{{hs.instituicao.descricao}}</td>
+                        <td class="col-lg-5">{{hs.instituicao.descricao}}</td>
                         <td class="col-lg-1">{{hs.ano}}</td>
-                        <td class="col-md-2">{{hs.serie.descricao}}</td>
+                        <td class="col-lg-2">{{hs.serie.descricao}}</td>
                         
                         {% if hs.situacao %}
                           <td class="col-lg-1">Aprovado</td>  
                         {% else %}
                           <td class="col-lg-1">Reprovado</td>
                         {% endif %}
-                        <td class="col-lg-1"><a href="{% url 'edicao-historico' hs.id %}">Editar</a></td>   
+                        <td class="col-lg-1"><a href="{% url 'edicao-historico' hs.id %}"> Editar</a></td>
+                        <td class="col-lg-1"><a href="{% url 'excluir-historico' hs.id %}"> Excluir</a></td>      
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -69,10 +89,41 @@
               </div>
 
             {% endif %}
+          
+            <button id="btn-consolidar" type="button" class="btn btn-primary">Consolidar Histórico</button>
+
     </div>
 </div>  
   
 </form>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    $("#btn-consolidar").click(function(){
+
+        $.ajax({
+          type:'POST',
+          headers: {'X-CSRFToken':$("input[name=csrfmiddlewaretoken]").val()},
+          url:'/historico/'+$("#aluno_id").val()+'/consolidar',
+          accept:'application/json'
+        }).done(function(response){
+            if(response.sucess){
+              $("#alert-success-cons").show();
+              $('html,body').scrollTop(0);
+            }
+          
+        }).fail(function(){
+            $("#alert-erro-err").show();
+            $('html,body').scrollTop(0);
+        
+        });
+
+    });  
+    
+  });
+</script>
+
 
 {% endblock body %}
 

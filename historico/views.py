@@ -4,17 +4,19 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
-from itertools import chain
+from itertools import chain, groupby
 
 from aluno.models import Aluno
 from escola.models import Serie, Disciplina, Configuracoes
 from escola import choices
 from models import Historico, Nota, Instituicao
 from historico.forms import HistoricoForm
+from rendimento.choices import RECUPERACAO, RECUPERACAO_FINAL
 import json
 import numpy as np
 from django.db import transaction
-from util.utils import gerar_PDF
+from util.utils import gerar_PDF, normal_round
+
 
 
 @login_required
@@ -60,6 +62,18 @@ def edicao_historico(request, historico_id):
 	form = HistoricoForm()
 	historico = Historico.objects.get(id=historico_id)
 	return render(request, 'edicao-historico.html', {'form':form, 'aluno':historico.aluno, 'notas':historico.notas.all(), 'historico':historico})
+
+
+@login_required
+def excluir_historico(request, historico_id):
+	form = HistoricoForm()
+	historico = Historico.objects.get(id=historico_id)
+	aluno = historico.aluno
+	historico.delete()
+	form.delete = True
+
+	return render(request, 'detalhe-historico.html', {'form':form, 'aluno':aluno, 'historicos':aluno.historicos.all()})
+
 
 @login_required
 def lista_instituicoes_historico(request):
@@ -132,6 +146,51 @@ def emitir_historico(request, aluno_id):
 	return gerar_PDF(request, context, 'template-historico-escolar-aluno', 'historico-'+aluno.nome)
 
 	# return render(request, 'template-historico-escolar-aluno.html', context)
+
+@login_required
+def consolidar_historico(request, aluno_id):
+	aluno = Aluno.objects.get(id=aluno_id)
+	confs = Configuracoes.objects.get(id=1)
+	matriculas = aluno.matriculas.exclude(ano=confs.ano_letivo)
+	cbms = Instituicao.objects.get(id=1)
+	for matricula in matriculas:
+		historico = Historico.objects.filter(ano=matricula.ano, aluno=aluno)
+		grupo_notas_disciplina = groupby(matricula.notas.all(), lambda x: x.disciplina)
+		if historico:
+			for key, value in grupo_notas_disciplina:
+				notas = [nt for nt in value]
+				nota = historico.notas.filter(disciplina=key)
+				nota.valor = get_nota_historico(notas)
+				nota.save()
+
+		else:
+			historico = Historico(instituicao=cbms, situacao=True, carga_horaria=200, serie=matricula.turma.serie, ano=matricula.ano, aluno=aluno)
+			historico.save()
+			for key, value in grupo_notas_disciplina:
+				notas = [nt for nt in value]
+				valor = get_nota_historico(notas)
+				if valor < confs.media and historico.situacao:
+					historico.situacao=False
+					historico.save()
+				nota = Nota(disciplina=key, valor=valor, historico=historico)
+				nota.save()
+	
+	return HttpResponse('{"sucess":true}', content_type='application/json')
+
+
+def get_nota_historico(notas):
+	
+	rec_final = next(( n for n in notas if n.bimestre == long(RECUPERACAO_FINAL) and n.tipo == choices.RECUPERACAO), None)
+	
+	medias_bimestrais = []
+	
+	for x, y in choices.BIMESTRE_CHOICES:	
+		notas_bimestre = [n.valor for n in notas if n.bimestre == x and n.tipo != RECUPERACAO]
+		nota_recuperacao = [n.valor for n in notas if n.bimestre == x and n.tipo == RECUPERACAO]
+		media_bimestral = sum(notas_bimestre)/3
+		medias_bimestrais.append(nota_recuperacao[0] if nota_recuperacao and nota_recuperacao[0] > media_bimestral else media_bimestral)
+
+	return rec_final if rec_final else normal_round(sum(medias_bimestrais)/4)
 
 
 def get_carga_horaria(aluno, series):
