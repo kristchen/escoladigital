@@ -5,13 +5,12 @@
 <link rel="stylesheet" type="text/css" href="{% static "/css/historico.css" %}">
 </head>
   <body> 
-  	
   	<table class="titulo">
   		<tr>
   			<td rowspan="6">
   				  	<div class="divImage">
              			<img src="{% static "/images/emblema.png" %}">    
-   					 </div>
+              </div>
   			</td>
   			<td colspan="2">
   				 <h3 class="h3-titulo">COLÉGIO BATISTA MONTE SINAI</h3> 	
@@ -28,7 +27,8 @@
   			<td colspan="2"  class="info"><label>ENDEREÇO: </label> AVENIDA J - Nº 194 - CEP  61.605-600 - JUREMA - CAUCAIA</td>
   		</tr>
   		<tr>
-  			<td class="info" ><label>CNPJ: </label>10653064/0001-45		
+  			<td colspan="2"  class="info" >
+          <label>CNPJ: </label>10653064/0001-45		
           <label style="margin-left:5px">  TELEFONE: </label>(85) 34891176</td>
   		</tr>
   		<tr>
@@ -85,7 +85,7 @@
               <td class="td-notas">{{dis.descricao}}</td>
               {% for nota in  dis.notas %}
                 {% if  nota %}
-                  <td class="td-notas td-dados-val">{{nota.valor}}</td>
+                  <td class="td-notas td-dados-val">{{nota.valor|floatformat:1}}</td>
                 {% else %}
                   <td class="td-notas td-dados-val">-</td>
                 {% endif %}
@@ -103,7 +103,7 @@
                 <td class="td-notas ">{{dis.descricao}}</td>
                 {% for nota in  dis.notas %}
                   {% if  nota %}
-                    <td class="td-notas td-dados-val">{{nota.valor}}</td>
+                    <td class="td-notas td-dados-val">{{nota.valor|floatformat:1}}</td>
                   {% else %}
                     <td class="td-notas td-dados-val">-</td>
                   {% endif %}
@@ -188,6 +188,9 @@
       <hr class="assinatura">
       <label>Diretor(a)</label>
     </div>
-  	
+    
+    <footer class="data-emissao footer">
+      Caucaia,  {{data|date:'d'}} de {{data|date:'F'}} de {{data|date:'Y'}}
+    </footer>
   </body>
 </html>   

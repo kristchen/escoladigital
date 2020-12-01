@@ -6,12 +6,11 @@
 </head>
   <body> 
   {% for matricula in matriculas  %}
-    
+    <div class="data-emissao">
+      <label>Data de emissão</label>: {{data|date:'d/m/Y'}}
+    </div>
         <div class="divImage">
              <img src="{% static "/images/emblema.png" %}">    
-        </div>
-        <div class="data-emissao">
-        <label>Data de emissão</label>: {{data|date:'d/m/Y'}}
         </div>
         <table align="right" class="titulo">
           <tr style="background-color:#adadad;">

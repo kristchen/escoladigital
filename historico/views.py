@@ -16,6 +16,7 @@ import json
 import numpy as np
 from django.db import transaction
 from util.utils import gerar_PDF, normal_round
+from datetime import datetime
 
 
 
@@ -141,7 +142,8 @@ def emitir_historico(request, aluno_id):
 	'rowspan_diversificada':len(diversificada) + 1, 
 	'diversificada':diversificada, 
 	'rowspan_base':len(base_nacional) +1, 
-	'base_nacional':base_nacional}
+	'base_nacional':base_nacional,
+	'data':datetime.now()}
 
 	return gerar_PDF(request, context, 'template-historico-escolar-aluno', 'historico-'+aluno.nome)
 
@@ -151,15 +153,16 @@ def emitir_historico(request, aluno_id):
 def consolidar_historico(request, aluno_id):
 	aluno = Aluno.objects.get(id=aluno_id)
 	confs = Configuracoes.objects.get(id=1)
-	matriculas = aluno.matriculas.exclude(ano=confs.ano_letivo)
+	matriculas = aluno.matriculas.filter(turma__serie__modalidade='F').exclude(ano=confs.ano_letivo)
 	cbms = Instituicao.objects.get(id=1)
 	for matricula in matriculas:
 		historico = Historico.objects.filter(ano=matricula.ano, aluno=aluno)
 		grupo_notas_disciplina = groupby(matricula.notas.all(), lambda x: x.disciplina)
 		if historico:
+			historico = historico[0]
 			for key, value in grupo_notas_disciplina:
 				notas = [nt for nt in value]
-				nota = historico.notas.filter(disciplina=key)
+				nota = historico.notas.get(disciplina=key)
 				nota.valor = get_nota_historico(notas)
 				nota.save()
 
@@ -180,7 +183,7 @@ def consolidar_historico(request, aluno_id):
 
 def get_nota_historico(notas):
 	
-	rec_final = next(( n for n in notas if n.bimestre == long(RECUPERACAO_FINAL) and n.tipo == choices.RECUPERACAO), None)
+	rec_final = next(( n for n in notas if n.bimestre == long(RECUPERACAO_FINAL) and n.tipo == RECUPERACAO), None)
 	
 	medias_bimestrais = []
 	
@@ -190,7 +193,7 @@ def get_nota_historico(notas):
 		media_bimestral = sum(notas_bimestre)/3
 		medias_bimestrais.append(nota_recuperacao[0] if nota_recuperacao and nota_recuperacao[0] > media_bimestral else media_bimestral)
 
-	return rec_final if rec_final else normal_round(sum(medias_bimestrais)/4)
+	return rec_final.valor if rec_final else normal_round(sum(medias_bimestrais)/4)
 
 
 def get_carga_horaria(aluno, series):

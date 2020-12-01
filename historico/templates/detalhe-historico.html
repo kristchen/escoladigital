@@ -111,6 +111,10 @@
             if(response.sucess){
               $("#alert-success-cons").show();
               $('html,body').scrollTop(0);
+
+              setTimeout(function(){
+                 location.reload()
+              },3000)
             }
           
         }).fail(function(){
